@@ -37,13 +37,23 @@ public class WorldGrid : MonoBehaviour {
 			RaycastHit vHit = new RaycastHit();
 			int vLayer = LayerMask.GetMask("GRID_COLLISION");
 			if (Physics.Raycast(vRay, out vHit, Mathf.Infinity, vLayer)) {
+				(int, int) vClickedCoord = PositionToCoord(vHit.point);
 
-				// Debug.Log("Clicked at: " + vHit.point);
-				// Debug.Log("Clicked at coord: " + PositionToCoord(vHit.point));
-				// GameObject vTemp;
-				// vTemp = GameObject.CreatePrimitive(PrimitiveType.Cube);
-				// (int, int) vCoord = PositionToCoord(vHit.point);
-				// vTemp.transform.localPosition = CoordToPosition(vCoord.Item1, vCoord.Item2);
+				//NOTE(marion): search obstacle on width
+				int vXOffset = CoordToIndex(vClickedCoord.Item1, vClickedCoord.Item2) / gridWidth * gridWidth;
+				for (int x = 0; x < gridWidth; x++) {
+					if (_map[vXOffset + x] > 0) {
+						Debug.Log("Move on X");
+					}
+				}
+
+				//NOTE(marion): search obstacle on height
+				int vYOffset = CoordToIndex(vClickedCoord.Item1, vClickedCoord.Item2) % gridWidth;
+				for (int y = 0; y < gridHeight; y++) {
+					if (_map[vYOffset + y * gridHeight] > 0) {
+						Debug.Log("Move on Y");
+					}
+				}
 			}
 		}
 	}
