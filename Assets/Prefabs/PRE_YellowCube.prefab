@@ -89,6 +89,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2905081424221576221}
   - component: {fileID: 167213575955492616}
+  - component: {fileID: -2576735947525330738}
   m_Layer: 0
   m_Name: PRE_YellowCube
   m_TagString: Untagged
@@ -123,6 +124,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7197a05d089e7d4999ae548eb8f5114, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &-2576735947525330738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4163025025360348056}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9c9d054ab0fc7049a0846bf3e69fc40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0
 --- !u!1 &4779314320172096161
 GameObject:
   m_ObjectHideFlags: 0
