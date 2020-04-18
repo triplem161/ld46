@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: MAT_inside_blue_cube
+  m_Shader: {fileID: -6465566751694194690, guid: bf494a8657aa4ed48baa9ef99303b8f9,
+    type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Floats:
+    - Vector1_1F36FC2B: 0.005
+    - Vector1_98CE0220: 1
+    - Vector1_BDFF3DD3: 0.5
+    - Vector1_ECCA0AB6: 2
+    - _color_speed: 3
+    - _move_speed: 1
+    - _speed: 1
+    m_Colors:
+    - Color_65829385: {r: 1, g: 0, b: 0.7419305, a: 1}
+    - Vector2_9D36F4AA: {r: 0, g: 0, b: 0, a: 0}
+    - _random_emission_seed: {r: 0, g: 0, b: 0, a: 0}
+    - _random_speed_seed: {r: 0, g: 0, b: 0, a: 0}
