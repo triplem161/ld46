@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 2905081424221576221}
   - component: {fileID: 167213575955492616}
   m_Layer: 0
-  m_Name: YellowCube
+  m_Name: PRE_YellowCube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -105,7 +105,7 @@ Transform:
   m_GameObject: {fileID: 4163025025360348056}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.09957719, y: 0.2852459, z: -1.6137309}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 5025208293591632730}
   m_Father: {fileID: 0}
