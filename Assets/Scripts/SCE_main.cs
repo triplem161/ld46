@@ -17,7 +17,7 @@ public class SCE_main : MonoBehaviour {
 			var vRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 			RaycastHit vHit = new RaycastHit();
 			if (Physics.Raycast(vRay, out vHit, Mathf.Infinity, _gridLayer)) {
-				grid.PullMagnets(vHit.point);
+				grid.PullOrder(vHit.point);
 			}
 		}
 	}
