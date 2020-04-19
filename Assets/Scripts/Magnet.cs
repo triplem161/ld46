@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Magnet : MonoBehaviour {
 
-	public float speed;
+	public MAGNET_COLOR color;
 
 	public void MoveTo(Vector3 pPosition) {
 		StartCoroutine(Moving(pPosition));

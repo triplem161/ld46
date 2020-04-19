@@ -22,14 +22,17 @@ public class WorldGrid : MonoBehaviour {
 	void Awake() {
 		_moveOrder = new List<(int startIndex, int endIndex)>();
 		Magnet vTemp1 = Instantiate(blueMagnet);
-		Magnet vTemp2 = Instantiate(yellowMagnet);
+		Magnet vTemp2 = Instantiate(blueMagnet);
+		Magnet vTemp3 = Instantiate(blueMagnet);
+		Magnet vTemp4 = Instantiate(blueMagnet);
+		Magnet vTemp5 = Instantiate(yellowMagnet);
 
 		_map = new Magnet[] {
 			vTemp1, null, null, null, null,
 			vTemp2, null, null, null, null,
+			null, null, vTemp3, null, null,
 			null, null, null, null, null,
-			null, null, null, null, null,
-			null, null, null, null, null
+			null, vTemp5, null, null, vTemp4
 		};
 
 		for (int i = 0; i < _map.Length; ++i) {
@@ -151,7 +154,89 @@ public class WorldGrid : MonoBehaviour {
 			}
 		}
 		_moveOrder.Clear();
-		Debug.Log(GridToString());
+		CheckLine();
+	}
+
+	private void CheckLine() {
+		int vColorCount = 0;
+		MAGNET_COLOR vXColor = MAGNET_COLOR.NONE;
+		MAGNET_COLOR vYColor = MAGNET_COLOR.NONE;
+
+		//Check horizontal line
+		for (int x = 0; x < _map.Length; x++) {
+			//every new line we reset increment
+			if (x % gridWidth == 0) {
+				if (vColorCount > 3) {
+					//remove from x -1 for color count
+					for (int i = x - 1; i >= x - vColorCount; i--) {
+						Destroy(_map[i].gameObject);
+						_map[i] = null;
+					}
+				}
+				vColorCount = 0;
+			}
+			if (_map[x] != null) {
+				if (_map[x].color != vXColor) {
+					if (vColorCount > 3) {
+						//remove from x - 1 for color count
+						for (int i = x - 1; i >= x - vColorCount; i--) {
+							Destroy(_map[i].gameObject);
+							_map[i] = null;
+						}
+					}
+					vXColor = _map[x].color;
+					vColorCount = 1;
+				} else {
+					vColorCount++;
+				}
+			} else {
+				if (vColorCount > 3) {
+					//remove from x - 1 for color count
+					for (int i = x - 1; i >= x - vColorCount; i--) {
+						Destroy(_map[i].gameObject);
+						_map[i] = null;
+					}
+				}
+				vColorCount = 0;
+			}
+		}
+		vColorCount = 0;
+
+		for (int x = 0; x < gridWidth; x++) {
+			int y;
+			for (y = 0; y < gridHeight; y++) {
+				int vIndex = CoordToIndex(x, y);
+				if (_map[vIndex] != null) {
+					if (_map[vIndex].color != vYColor) {
+						if (vColorCount > 3) {
+							for (int i = 0; i < vColorCount; ++i) {
+								Destroy(_map[CoordToIndex(x, y - 1- i)].gameObject);
+							}
+						}
+						vYColor = _map[vIndex].color;
+						vColorCount = 1;
+					} else {
+						vColorCount++;
+					}
+				} else {
+					if (vColorCount > 3) {
+						for (int i = 0; i < vColorCount; ++i) {
+							Destroy(_map[CoordToIndex(x, y - 1 - i)].gameObject);
+						}
+					}
+					vColorCount = 0;
+				}
+
+			}
+			if (vColorCount > 3) {
+				for (int i = 0; i < vColorCount; ++i) {
+					Destroy(_map[CoordToIndex(x, y - i)].gameObject);
+				}
+			}
+			vColorCount = 0;
+		}
+
+
 	}
 
 	private void ChangeIndex(int pOld, int pNew) {
