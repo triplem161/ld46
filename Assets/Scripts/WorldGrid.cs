@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class WorldGrid : MonoBehaviour {
 
@@ -16,8 +17,10 @@ public class WorldGrid : MonoBehaviour {
 	public Renderer debugRenderer;
 
 	private Magnet[] _map;
+	private List<(int startIndex, int endIndex)> _moveOrder;
 
 	void Awake() {
+		_moveOrder = new List<(int startIndex, int endIndex)>();
 		Magnet vTemp1 = Instantiate(blueMagnet);
 		Magnet vTemp2 = Instantiate(yellowMagnet);
 
@@ -41,7 +44,7 @@ public class WorldGrid : MonoBehaviour {
 		debugRenderer.material.SetVector("GRID_SIZE", new Vector4(gridWidth, gridHeight, 0, 0));
 	}
 
-	public void PullMagnets(Vector3 pClickPosition) {
+	public void PullOrder(Vector3 pClickPosition) {
 		(int x, int y) vClickedCoord = PositionToCoord(pClickPosition);
 		int vIndex = CoordToIndex(vClickedCoord.x, vClickedCoord.y);
 
@@ -49,81 +52,106 @@ public class WorldGrid : MonoBehaviour {
 			return;
 		}
 
-		// //NOTE(marion): search magnet on X
-		// int vXOffset = CoordToIndex(vClickedCoord.x, vClickedCoord.y) / gridWidth * gridWidth;
-		// for (int x = 0; x < gridWidth; x++) {
-		//	if (_map[vXOffset + x] != null) {
-		//		int vInc = (vXOffset + x < vClickedCoord.x) ? -1 : 1;
-		//		int vFinalXCoord = Mathf.Clamp(vClickedCoord.x + vInc, 0, gridWidth - 1);
+		// X ATTRACT FROM LEFT
+		int vIncRight = 0;
+		int vStartX = vClickedCoord.y * gridWidth;
+		for (int x = vIndex; x >= vStartX; x--) {
+			if (_map[x] != null) {
+				_moveOrder.Add((x, vIndex - 1 - vIncRight));
+				vIncRight++;
+			}
+		}
 
-		//		_map[vXOffset + x]?.MoveTo(CoordToPosition(vFinalXCoord, vClickedCoord.y)
-		//								   + new Vector3(0.5f, 0, -0.5f));
+		// X ATTRACT FROM RIGHT
+		int vIncLeft = 0;
+		for (int x = vIndex; x < vStartX + gridWidth; x++) {
+			if (_map[x] != null) {
+				_moveOrder.Add((x, vIndex + 1 + vIncLeft));
+				vIncLeft++;
+			}
+		}
 
-		//		_map[CoordToIndex(vFinalXCoord, vClickedCoord.y)] = _map[vXOffset + x];
-		//		_map[vXOffset + x] = null;
-		//	}
-		// }
-
-
-		// Y MOVE DOWN
+		// Y ATTRACT FROM TOP
 		int vIncDown = 0;
 		for (int y = vIndex; y >= 0; y -= gridWidth) {
 			if (_map[y] != null) {
-				Debug.Log("MOVING DOWN");
-				_map[y].MoveTo(CoordToPosition(vClickedCoord.x, vClickedCoord.y - 1 - vIncDown)
-							   + new Vector3(0.5f, 0, -0.5f));
-				ChangeIndex(y, vIndex - gridWidth * (vIncDown + 1));
+				_moveOrder.Add((y, vIndex - gridWidth * (vIncDown + 1)));
 				vIncDown++;
 			}
 		}
 
-		// Y UP
+		// Y ATTRACT FROM BOTTOM
 		int vIncUp = 0;
 		for (int y = vIndex; y < _map.Length; y += gridWidth) {
 			if (_map[y] != null) {
-				Debug.Log("MOVING UP");
-				_map[y].MoveTo(CoordToPosition(vClickedCoord.x, vClickedCoord.y + 1 + vIncUp)
-							   + new Vector3(0.5f, 0, -0.5f));
-				ChangeIndex(y, vIndex + gridWidth * (vIncUp + 1));
+				_moveOrder.Add((y, vIndex + gridWidth * (vIncUp + 1)));
 				vIncUp++;
 			}
 		}
 
-		Debug.Log(GridToString());
+		Move();
 	}
 
-	public void PushMagnets(Vector3 pClickPosition) {
+	public void PushOrder(Vector3 pClickPosition) {
 		(int x, int y) vClickedCoord = PositionToCoord(pClickPosition);
+		int vIndex = CoordToIndex(vClickedCoord.x, vClickedCoord.y);
+
+		if (_map[vIndex] != null) {
+			return;
+		}
+
+		// X PUSH TO LEFT
+		int vIncRight = 0;
+		int vStartX = vClickedCoord.y * gridWidth;
+		for (int x = vStartX; x < vIndex; x++) {
+			if (_map[x] != null) {
+				_moveOrder.Add((x, vStartX + vIncRight));
+				vIncRight++;
+			}
+		}
+
+		// X PUSH TO RIGHT
+		int vIncLeft = 0;
+		for (int x = vStartX + gridWidth - 1; x >= vIndex; x--) {
+			if (_map[x] != null) {
+				_moveOrder.Add((x, vStartX + gridWidth - 1 - vIncLeft));
+				vIncLeft++;
+			}
+		}
+
+		// Y PUSH TO TOP
+		int vIncDown = 0;
+		for (int y = vClickedCoord.x; y < vIndex; y += gridWidth) {
+			if (_map[y] != null) {
+				_moveOrder.Add((y, vClickedCoord.x + gridWidth * vIncDown));
+				vIncDown++;
+			}
+		}
+
+		// Y PUSH TO BOTTOM
+		int vIncUp = 0;
+		int vLastIndex = gridHeight * gridWidth - (gridWidth - vClickedCoord.x);
+		for (int y = vLastIndex; y >= vIndex; y -= gridWidth) {
+			if (_map[y] != null) {
+				_moveOrder.Add((y, vLastIndex - gridWidth * vIncUp));
+				vIncUp++;
+			}
+		}
+
+		Move();
 	}
 
-	public void MoveMagnets(Vector3 pClickPosition) {
-		(int, int) vClickedCoord = PositionToCoord(pClickPosition);
-
-		//NOTE(marion): search obstacle on width
-		int vXOffset = CoordToIndex(vClickedCoord.Item1, vClickedCoord.Item2) / gridWidth * gridWidth;
-		for (int x = 0; x < gridWidth; x++) {
-			if (_map[vXOffset + x] != null) {
-				int vInc = (vXOffset + x < vClickedCoord.Item1) ? -1 : 1;
-				int vFinalXCoord = Mathf.Clamp(vClickedCoord.Item1 + vInc, 0, gridWidth - 1);
-				_map[vXOffset + x]?.MoveTo(CoordToPosition(vFinalXCoord, vClickedCoord.Item2)
-										   + new Vector3(0.5f, 0, -0.5f));
-				_map[CoordToIndex(vFinalXCoord, vClickedCoord.Item2)] = _map[vXOffset + x];
-				_map[vXOffset + x] = null;
+	private void Move() {
+		for (int i = 0; i < _moveOrder.Count; ++i) {
+			int vStartIndex = _moveOrder[i].startIndex;
+			if (vStartIndex != _moveOrder[i].endIndex) {
+				Vector3 vDestination = IndexToPosition(_moveOrder[i].endIndex);
+				_map[vStartIndex].MoveTo(vDestination + new Vector3(0.5f, 0, -0.5f));
+				ChangeIndex(vStartIndex, _moveOrder[i].endIndex);
 			}
 		}
-
-		//NOTE(marion): search obstacle on height
-		int vYOffset = CoordToIndex(vClickedCoord.Item1, vClickedCoord.Item2) % gridWidth;
-		for (int y = 0; y < gridHeight; y++) {
-			if (_map[vYOffset + y * gridHeight] != null) {
-				int vInc = (vYOffset + y * gridHeight < vClickedCoord.Item2) ? -1 : 1;
-				int vFinalYCoord = Mathf.Clamp(vClickedCoord.Item2 + vInc, 0, gridHeight - 1);
-				_map[vYOffset + y * gridHeight].MoveTo(CoordToPosition(vClickedCoord.Item1, vFinalYCoord)
-													   + new Vector3(0.5f, 0, -0.5f));
-				_map[CoordToIndex(vClickedCoord.Item1, vFinalYCoord)] = _map[vYOffset + y * gridHeight];
-				_map[vYOffset + y * gridHeight] = null;
-			}
-		}
+		_moveOrder.Clear();
+		Debug.Log(GridToString());
 	}
 
 	private void ChangeIndex(int pOld, int pNew) {
@@ -156,6 +184,7 @@ public class WorldGrid : MonoBehaviour {
 	}
 
 	private string GridToString() {
+		Debug.ClearDeveloperConsole();
 		string vToReturn = "";
 		for (int i = 0; i < _map.Length; ++i) {
 			if (i % gridWidth == 0) {
@@ -164,7 +193,7 @@ public class WorldGrid : MonoBehaviour {
 			if (_map[i] != null) {
 				vToReturn += "C ";
 			} else {
-				vToReturn += "_ ";
+				vToReturn += "O ";
 			}
 		}
 		return vToReturn;
