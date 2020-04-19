@@ -140,6 +140,7 @@ public class WorldGrid : MonoBehaviour {
 
 	// REALLY UGLY IMPROVE LATER
 	private void CheckLine() {
+		List<int> _indexToDestroy = new List<int>();
 		int vColorCount = 0;
 		MAGNET_COLOR vXColor = MAGNET_COLOR.NONE;
 		MAGNET_COLOR vYColor = MAGNET_COLOR.NONE;
@@ -151,9 +152,12 @@ public class WorldGrid : MonoBehaviour {
 				if (vColorCount > 3) {
 					//remove from x -1 for color count
 					for (int i = x - 1; i >= x - vColorCount; i--) {
-						Destroy(_map[i].gameObject);
-						_map[i] = null;
-						magnetsCount -= vColorCount;
+						if (_indexToDestroy.IndexOf(i) == -1) {
+							_indexToDestroy.Add(i);
+						}
+						// Destroy(_map[i].gameObject);
+						// _map[i] = null;
+						// magnetsCount -= vColorCount;
 					}
 				}
 				vColorCount = 0;
@@ -163,9 +167,12 @@ public class WorldGrid : MonoBehaviour {
 					if (vColorCount > 3) {
 						//remove from x - 1 for color count
 						for (int i = x - 1; i >= x - vColorCount; i--) {
-							Destroy(_map[i].gameObject);
-							_map[i] = null;
-							magnetsCount -= vColorCount;
+							if (_indexToDestroy.IndexOf(i) == -1) {
+								_indexToDestroy.Add(i);
+							}
+							// Destroy(_map[i].gameObject);
+							// _map[i] = null;
+							// magnetsCount -= vColorCount;
 						}
 					}
 					vXColor = _map[x].color;
@@ -177,9 +184,12 @@ public class WorldGrid : MonoBehaviour {
 				if (vColorCount > 3) {
 					//remove from x - 1 for color count
 					for (int i = x - 1; i >= x - vColorCount; i--) {
-						Destroy(_map[i].gameObject);
-						_map[i] = null;
-						magnetsCount -= vColorCount;
+						if (_indexToDestroy.IndexOf(i) == -1) {
+							_indexToDestroy.Add(i);
+						}
+						// Destroy(_map[i].gameObject);
+						// _map[i] = null;
+						// magnetsCount -= vColorCount;
 					}
 				}
 				vColorCount = 0;
@@ -195,8 +205,11 @@ public class WorldGrid : MonoBehaviour {
 					if (_map[vIndex].color != vYColor) {
 						if (vColorCount > 3) {
 							for (int i = 0; i < vColorCount; ++i) {
-								Destroy(_map[CoordToIndex(x, y - 1- i)].gameObject);
-								magnetsCount -= vColorCount;
+								if (_indexToDestroy.IndexOf(i) == -1) {
+									_indexToDestroy.Add(CoordToIndex(x, y - 1 - i));
+								}
+								// Destroy(_map[CoordToIndex(x, y - 1- i)].gameObject);
+								// magnetsCount -= vColorCount;
 							}
 						}
 						vYColor = _map[vIndex].color;
@@ -207,8 +220,11 @@ public class WorldGrid : MonoBehaviour {
 				} else {
 					if (vColorCount > 3) {
 						for (int i = 0; i < vColorCount; ++i) {
-							Destroy(_map[CoordToIndex(x, y - 1 - i)].gameObject);
-							magnetsCount -= vColorCount;
+							if (_indexToDestroy.IndexOf(i) == -1) {
+								_indexToDestroy.Add(CoordToIndex(x, y - 1 - i));
+							}
+							// Destroy(_map[CoordToIndex(x, y - 1 - i)].gameObject);
+							// magnetsCount -= vColorCount;
 						}
 					}
 					vColorCount = 0;
@@ -217,14 +233,27 @@ public class WorldGrid : MonoBehaviour {
 			}
 			if (vColorCount > 3) {
 				for (int i = 0; i < vColorCount; ++i) {
-					Destroy(_map[CoordToIndex(x, y - i)].gameObject);
-					magnetsCount -= vColorCount;
+					if (_indexToDestroy.IndexOf(i) == -1) {
+						_indexToDestroy.Add(CoordToIndex(x, y - i));
+					}
+					// Destroy(_map[CoordToIndex(x, y - i)].gameObject);
+					// magnetsCount -= vColorCount;
 				}
 			}
 			vColorCount = 0;
 		}
 
+		if (_indexToDestroy.Count > 0) {
+			DestroyMagnet(_indexToDestroy);
+		}
+	}
 
+	private void DestroyMagnet(List<int> pList) {
+		foreach (int vIndex in pList) {
+			_map[vIndex].Destroy();
+			magnetsCount--;
+			_map[vIndex] = null;
+		}
 	}
 
 	public void AddMagnet(Magnet pToAdd) {
