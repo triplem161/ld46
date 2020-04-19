@@ -7,6 +7,8 @@ public class Magnet : MonoBehaviour {
 
 	public MeshRenderer cubeRenderer;
 
+	public ParticleSystem DeathParticles;
+
 	void OnCollisionEnter(Collision pOther) {
 		Vector3 vDirection = -(pOther.contacts[0].point - transform.position).normalized;
 		pOther.gameObject.GetComponent<Alien>()?.Expulse(vDirection * 20f);
@@ -45,6 +47,20 @@ public class Magnet : MonoBehaviour {
 			vEllapsed += Time.deltaTime;
 			yield return null;
 		}
+		
+		Instantiate(DeathParticles, transform.position, Quaternion.identity);
+
+		vDuration = 0.25f;
+		vEllapsed = 0;
+
+		float vInitScale = transform.localScale.x;
+
+		while (vEllapsed < vDuration) {
+			transform.localScale = Vector3.one * Mathf.Lerp(vInitScale, 0, vEllapsed / vDuration);
+			vEllapsed += Time.deltaTime;
+			yield return null;
+		}
+
 		Destroy(gameObject);
 	}
 }

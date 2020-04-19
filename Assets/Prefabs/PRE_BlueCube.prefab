@@ -303,6 +303,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   color: 3
   cubeRenderer: {fileID: 5490801821585631913}
+  DeathParticles: {fileID: 2711971990662585124, guid: 5b952b56856d7794fb8236e629de59bb,
+    type: 3}
 --- !u!65 &3594442501761246554
 BoxCollider:
   m_ObjectHideFlags: 0

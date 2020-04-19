@@ -6,6 +6,8 @@ public class Alien : MonoBehaviour {
 	public WorldGrid grid;
 	public Animator animator;
 	public SpriteRenderer spriteRenderer;
+	public ParticleSystem runParticles;
+	public ParticleSystem deathParticles;
 
 	private ALIEN_STATE state;
 	private Vector3 _targetDestination;
@@ -28,6 +30,7 @@ public class Alien : MonoBehaviour {
 		animator.SetBool("hurt", true);
 		yield return new WaitForSeconds(1.5f);
 		Destroy(gameObject);
+		Instantiate(deathParticles,transform.position,Quaternion.identity);
 	}
 
 	private IEnumerator Running() {
@@ -60,6 +63,7 @@ public class Alien : MonoBehaviour {
 		float vDuration = vSquareCount;
 		float vEllapsed = 0;
 
+		runParticles.Play();
 		animator.SetBool("run", true);
 		while (vEllapsed < vDuration) {
 			transform.position = Vector3.Lerp(vStartPos, vEndPos, vEllapsed / vDuration);
@@ -68,7 +72,7 @@ public class Alien : MonoBehaviour {
 		}
 		transform.position = vEndPos;
 		animator.SetBool("run", false);
-
+		runParticles.Stop();
 		StartCoroutine(Idle());
 	}
 
