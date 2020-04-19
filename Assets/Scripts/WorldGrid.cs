@@ -25,8 +25,8 @@ public class WorldGrid : MonoBehaviour {
 		Magnet vTemp2 = Instantiate(yellowMagnet);
 
 		_map = new Magnet[] {
-			vTemp1, vTemp2, null, null, null,
-			null, null, null, null, null,
+			vTemp1, null, null, null, null,
+			vTemp2, null, null, null, null,
 			null, null, null, null, null,
 			null, null, null, null, null,
 			null, null, null, null, null
@@ -52,7 +52,7 @@ public class WorldGrid : MonoBehaviour {
 			return;
 		}
 
-		// X MOVE RIGHT
+		// X ATTRACT FROM LEFT
 		int vIncRight = 0;
 		int vStartX = vClickedCoord.y * gridWidth;
 		for (int x = vIndex; x >= vStartX; x--) {
@@ -62,16 +62,16 @@ public class WorldGrid : MonoBehaviour {
 			}
 		}
 
-		// X MOVE LEFT
+		// X ATTRACT FROM RIGHT
 		int vIncLeft = 0;
-		for (int x = vIndex; x < vStartX + gridWidth - 1; x++) {
+		for (int x = vIndex; x < vStartX + gridWidth; x++) {
 			if (_map[x] != null) {
 				_moveOrder.Add((x, vIndex + 1 + vIncLeft));
 				vIncLeft++;
 			}
 		}
 
-		// Y MOVE DOWN
+		// Y ATTRACT FROM TOP
 		int vIncDown = 0;
 		for (int y = vIndex; y >= 0; y -= gridWidth) {
 			if (_map[y] != null) {
@@ -80,7 +80,7 @@ public class WorldGrid : MonoBehaviour {
 			}
 		}
 
-		// Y UP
+		// Y ATTRACT FROM BOTTOM
 		int vIncUp = 0;
 		for (int y = vIndex; y < _map.Length; y += gridWidth) {
 			if (_map[y] != null) {
@@ -92,8 +92,53 @@ public class WorldGrid : MonoBehaviour {
 		Move();
 	}
 
-	public void PushMagnets(Vector3 pClickPosition) {
+	public void PushOrder(Vector3 pClickPosition) {
 		(int x, int y) vClickedCoord = PositionToCoord(pClickPosition);
+		int vIndex = CoordToIndex(vClickedCoord.x, vClickedCoord.y);
+
+		if (_map[vIndex] != null) {
+			return;
+		}
+
+		// X PUSH TO LEFT
+		int vIncRight = 0;
+		int vStartX = vClickedCoord.y * gridWidth;
+		for (int x = vStartX; x < vIndex; x++) {
+			if (_map[x] != null) {
+				_moveOrder.Add((x, vStartX + vIncRight));
+				vIncRight++;
+			}
+		}
+
+		// X PUSH TO RIGHT
+		int vIncLeft = 0;
+		for (int x = vStartX + gridWidth - 1; x >= vIndex; x--) {
+			if (_map[x] != null) {
+				_moveOrder.Add((x, vStartX + gridWidth - 1 - vIncLeft));
+				vIncLeft++;
+			}
+		}
+
+		// Y PUSH TO TOP
+		int vIncDown = 0;
+		for (int y = vClickedCoord.x; y < vIndex; y += gridWidth) {
+			if (_map[y] != null) {
+				_moveOrder.Add((y, vClickedCoord.x + gridWidth * vIncDown));
+				vIncDown++;
+			}
+		}
+
+		// Y PUSH TO BOTTOM
+		int vIncUp = 0;
+		int vLastIndex = gridHeight * gridWidth - (gridWidth - vClickedCoord.x);
+		for (int y = vLastIndex; y >= vIndex; y -= gridWidth) {
+			if (_map[y] != null) {
+				_moveOrder.Add((y, vLastIndex - gridWidth * vIncUp));
+				vIncUp++;
+			}
+		}
+
+		Move();
 	}
 
 	private void Move() {
@@ -106,6 +151,7 @@ public class WorldGrid : MonoBehaviour {
 			}
 		}
 		_moveOrder.Clear();
+		Debug.Log(GridToString());
 	}
 
 	private void ChangeIndex(int pOld, int pNew) {
@@ -138,6 +184,7 @@ public class WorldGrid : MonoBehaviour {
 	}
 
 	private string GridToString() {
+		Debug.ClearDeveloperConsole();
 		string vToReturn = "";
 		for (int i = 0; i < _map.Length; ++i) {
 			if (i % gridWidth == 0) {
