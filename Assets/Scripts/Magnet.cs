@@ -7,6 +7,13 @@ public class Magnet : MonoBehaviour {
 
 	public MeshRenderer cubeRenderer;
 
+	void OnCollisionEnter(Collision pOther) {
+		Vector3 vDirection = -(pOther.contacts[0].point - transform.position).normalized;
+		pOther.gameObject.GetComponent<Alien>()?.Expulse(vDirection * 20f);
+		// pOther.gameObject.GetComponent<Rigidbody>()?.AddForce(vDirection * 20f);
+		// pOther.gameObject.GetComponent<Rigidbody>()?.AddExplosionForce(10f, transform.position, 2);
+	}
+
 	public void MoveTo(Vector3 pPosition) {
 		StartCoroutine(Moving(pPosition));
 	}

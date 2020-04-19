@@ -252,6 +252,8 @@ GameObject:
   - component: {fileID: 1230961551782256180}
   - component: {fileID: 1941264042121432265}
   - component: {fileID: -4051140355603832799}
+  - component: {fileID: 3594442501761246554}
+  - component: {fileID: 9002849005481223817}
   m_Layer: 0
   m_Name: PRE_BlueCube
   m_TagString: Untagged
@@ -300,6 +302,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   color: 3
   cubeRenderer: {fileID: 5490801821585631913}
+--- !u!65 &3594442501761246554
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6360348880758429356}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &9002849005481223817
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6360348880758429356}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &8390064748315206814
 GameObject:
   m_ObjectHideFlags: 0

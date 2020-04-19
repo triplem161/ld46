@@ -297,6 +297,14 @@ public class WorldGrid : MonoBehaviour {
 		return (Mathf.FloorToInt(pPosition.x + vOffset.x), Mathf.FloorToInt(vOffset.z - pPosition.z));
 	}
 
+	// public (int yMin, int yMax) YToCoordExtreme(int pY) {
+	//	return (0, 0);
+	// }
+
+	// public (int xMin, int xMax) XToCoordExtreme(int pX) {
+	//	return (0, 0);
+	// }
+
 	private string GridToString() {
 		Debug.ClearDeveloperConsole();
 		string vToReturn = "";

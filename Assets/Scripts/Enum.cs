@@ -1,1 +1,4 @@
 ﻿public enum MAGNET_COLOR { NONE, RED, YELLOW, BLUE }
+
+public enum ALIEN_STATE { IDLE, RUNNING, DYING }
+public enum ALIEN_DIRECTION {NORTH, SOUTH, EAST, WEST }
