@@ -26,6 +26,7 @@ public class Alien : MonoBehaviour {
 	public void Expulse(Vector3 pForceDirection) {
 		StopAllCoroutines();
 		animator.SetBool("run", false);
+		pForceDirection += Vector3.up * 5;
 		GetComponent<Rigidbody>().AddForce(pForceDirection);
 		StartCoroutine(Dying());
 	}
@@ -33,7 +34,7 @@ public class Alien : MonoBehaviour {
 	private IEnumerator Dying() {
 		_camShake.Shake(0.25f);
 		animator.SetBool("hurt", true);
-		yield return new WaitForSeconds(1.5f);
+		yield return new WaitForSeconds(0.5f);
 		Destroy(gameObject);
 		Instantiate(deathParticles,transform.position,Quaternion.identity);
 	}
