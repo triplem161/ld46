@@ -9,7 +9,8 @@ public class SCE_main : MonoBehaviour {
 	private int _gridLayer;
 
 	[Header("Cursor")]
-	public Transform cursor;
+	public Transform attractCursor;
+	public Transform repulseCursor;
 
 	[Header("Magnet Spawner")]
 	public Magnet[] magnetPrefabs;
@@ -28,27 +29,33 @@ public class SCE_main : MonoBehaviour {
 	}
 
 	private void Inputs() {
-		var vRayHover = Camera.main.ScreenPointToRay(Input.mousePosition);
-		RaycastHit vHitHover = new RaycastHit();
-		if (Physics.Raycast(vRayHover, out vHitHover, Mathf.Infinity, _gridLayer)) {
-			(int x, int y) vCoord = grid.PositionToCoord(vHitHover.point);
-			Vector3 vLocalPos = grid.CoordToPosition(vCoord.x, vCoord.y) + new Vector3(0.5f, 0, -0.5f);
-			cursor.position = new Vector3(vLocalPos.x, 0.6f, vLocalPos.z);
-		} else {
-			cursor.position = Vector3.down;
-		}
-
 		if (Input.GetMouseButtonDown(0)) {
 			var vRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 			RaycastHit vHit = new RaycastHit();
 			if (Physics.Raycast(vRay, out vHit, Mathf.Infinity, _gridLayer)) {
+				(int x, int y) vCoord = grid.PositionToCoord(vHit.point);
+				Vector3 vLocalPos = grid.CoordToPosition(vCoord.x, vCoord.y) + new Vector3(0.5f, 0, -0.5f);
+				attractCursor.position = new Vector3(vLocalPos.x, 0.6f, vLocalPos.z);
+				repulseCursor.gameObject.SetActive(false);
+				attractCursor.gameObject.SetActive(false);
+				attractCursor.gameObject.SetActive(true);
 				grid.PullOrder(vHit.point);
+			} else {
+				attractCursor.transform.position = Vector3.down;
 			}
 		} else if (Input.GetMouseButtonDown(1)) {
 			var vRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 			RaycastHit vHit = new RaycastHit();
 			if (Physics.Raycast(vRay, out vHit, Mathf.Infinity, _gridLayer)) {
+				(int x, int y) vCoord = grid.PositionToCoord(vHit.point);
+				Vector3 vLocalPos = grid.CoordToPosition(vCoord.x, vCoord.y) + new Vector3(0.5f, 0, -0.5f);
+				repulseCursor.position = new Vector3(vLocalPos.x, 0.6f, vLocalPos.z);
+				attractCursor.gameObject.SetActive(false);
+				repulseCursor.gameObject.SetActive(false);
+				repulseCursor.gameObject.SetActive(true);
 				grid.PushOrder(vHit.point);
+			} else {
+				repulseCursor.transform.position = Vector3.down;
 			}
 		}
 	}
