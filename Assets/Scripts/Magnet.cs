@@ -5,8 +5,14 @@ public class Magnet : MonoBehaviour {
 
 	public MAGNET_COLOR color;
 
+	public MeshRenderer cubeRenderer;
+
 	public void MoveTo(Vector3 pPosition) {
 		StartCoroutine(Moving(pPosition));
+	}
+
+	public void Destroy() {
+		StartCoroutine(Destroying());
 	}
 
 	private IEnumerator Moving(Vector3 pPosition) {
@@ -21,5 +27,17 @@ public class Magnet : MonoBehaviour {
 			yield return null;
 		}
 		transform.position = vEnd;
+	}
+
+	private IEnumerator Destroying() {
+		float vDuration = 0.5f;
+		float vEllapsed = 0;
+
+		while (vEllapsed < vDuration) {
+			cubeRenderer.materials[0].SetFloat("_dissolve", Mathf.Lerp(0, 1, vEllapsed / vDuration));
+			vEllapsed += Time.deltaTime;
+			yield return null;
+		}
+		Destroy(gameObject);
 	}
 }

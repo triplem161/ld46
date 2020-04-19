@@ -137,6 +137,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   color: 2
+  cubeRenderer: {fileID: 4287297660630347917}
 --- !u!1 &4779314320172096161
 GameObject:
   m_ObjectHideFlags: 0
