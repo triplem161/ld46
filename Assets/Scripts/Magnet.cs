@@ -9,6 +9,12 @@ public class Magnet : MonoBehaviour {
 
 	public ParticleSystem DeathParticles;
 
+	private CameraShake _camShake;
+
+	private void Awake() {
+		_camShake = FindObjectOfType<CameraShake>();
+	}
+
 	void OnCollisionEnter(Collision pOther) {
 		Vector3 vDirection = -(pOther.contacts[0].point - transform.position).normalized;
 		pOther.gameObject.GetComponent<Alien>()?.Expulse(vDirection * 20f);
@@ -47,7 +53,10 @@ public class Magnet : MonoBehaviour {
 			vEllapsed += Time.deltaTime;
 			yield return null;
 		}
-		
+
+		_camShake.Shake(0.1f);
+
+
 		Instantiate(DeathParticles, transform.position, Quaternion.identity);
 
 		vDuration = 0.25f;

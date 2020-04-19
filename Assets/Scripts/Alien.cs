@@ -12,11 +12,15 @@ public class Alien : MonoBehaviour {
 	private ALIEN_STATE state;
 	private Vector3 _targetDestination;
 
+	private CameraShake _camShake;
+
 	void Awake() {
 		(int x, int y) vCoord = grid.PositionToCoord(transform.position);
 		Vector3 vLocalPos = grid.CoordToPosition(vCoord.x, vCoord.y) + new Vector3(0.5f, 0f, -0.5f);
 		transform.position = new Vector3(vLocalPos.x, 1f, vLocalPos.z);
 		StartCoroutine(Running());
+
+		_camShake = FindObjectOfType<CameraShake>();
 	}
 
 	public void Expulse(Vector3 pForceDirection) {
@@ -27,6 +31,7 @@ public class Alien : MonoBehaviour {
 	}
 
 	private IEnumerator Dying() {
+		_camShake.Shake(0.25f);
 		animator.SetBool("hurt", true);
 		yield return new WaitForSeconds(1.5f);
 		Destroy(gameObject);
