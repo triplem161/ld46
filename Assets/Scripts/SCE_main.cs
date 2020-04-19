@@ -8,6 +8,9 @@ public class SCE_main : MonoBehaviour {
 
 	private int _gridLayer;
 
+	[Header("Cursor")]
+	public Transform cursor;
+
 	[Header("Magnet Spawner")]
 	public Magnet[] magnetPrefabs;
 	public float magnetSpawnTimer = 3;
@@ -25,6 +28,16 @@ public class SCE_main : MonoBehaviour {
 	}
 
 	private void Inputs() {
+		var vRayHover = Camera.main.ScreenPointToRay(Input.mousePosition);
+		RaycastHit vHitHover = new RaycastHit();
+		if (Physics.Raycast(vRayHover, out vHitHover, Mathf.Infinity, _gridLayer)) {
+			(int x, int y) vCoord = grid.PositionToCoord(vHitHover.point);
+			Vector3 vLocalPos = grid.CoordToPosition(vCoord.x, vCoord.y) + new Vector3(0.5f, 0, -0.5f);
+			cursor.position = new Vector3(vLocalPos.x, 0.6f, vLocalPos.z);
+		} else {
+			cursor.position = Vector3.down;
+		}
+
 		if (Input.GetMouseButtonDown(0)) {
 			var vRay = Camera.main.ScreenPointToRay(Input.mousePosition);
 			RaycastHit vHit = new RaycastHit();

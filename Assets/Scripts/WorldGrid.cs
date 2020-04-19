@@ -273,26 +273,26 @@ public class WorldGrid : MonoBehaviour {
 		_map[pOld] = null;
 	}
 
-	private int CoordToIndex(int pX, int pY) {
+	public int CoordToIndex(int pX, int pY) {
 		return pX + gridWidth * pY;
 	}
 
-	private (int x, int y) IndexToCoord(int pIndex) {
+	public (int x, int y) IndexToCoord(int pIndex) {
 		return (pIndex % gridWidth, pIndex / gridWidth);
 	}
 
-	private Vector3 IndexToPosition(int pIndex) {
+	public Vector3 IndexToPosition(int pIndex) {
 		(int x, int y) vCoord = IndexToCoord(pIndex);
 		Vector3 vOffset = new Vector3(gridWidth / 2f, 0, gridHeight / 2f);
 		Vector3 vOrigin = new Vector3(-vOffset.x, 0.5f, vOffset.z);
 		return new Vector3(vOrigin.x + vCoord.x, 0.5f, vOrigin.z - vCoord.y);
 	}
 
-	private Vector3 CoordToPosition(int pX, int pY) {
+	public Vector3 CoordToPosition(int pX, int pY) {
 		return IndexToPosition(CoordToIndex(pX, pY));
 	}
 
-	private (int x, int y) PositionToCoord(Vector3 pPosition) {
+	public (int x, int y) PositionToCoord(Vector3 pPosition) {
 		Vector3 vOffset = new Vector3(gridWidth / 2f, 0, gridHeight / 2f);
 		return (Mathf.FloorToInt(pPosition.x + vOffset.x), Mathf.FloorToInt(vOffset.z - pPosition.z));
 	}
