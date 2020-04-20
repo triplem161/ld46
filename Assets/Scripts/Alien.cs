@@ -24,8 +24,7 @@ public class Alien : MonoBehaviour {
 		(int x, int y) vCoord = grid.PositionToCoord(transform.position);
 		Vector3 vLocalPos = grid.CoordToPosition(vCoord.x, vCoord.y) + new Vector3(0.5f, 0f, -0.5f);
 		transform.position = new Vector3(vLocalPos.x, 1f, vLocalPos.z);
-		grid.CeilBlackList(vCoord.x, vCoord.y, new Vector2Int(0, 0), 1);
-		StartCoroutine(Running());
+		grid.CeilBlackList(0, 0, new Vector2Int(0, 0), 1);
 
 		_camShake = FindObjectOfType<CameraShake>();
 		manager = FindObjectOfType<SCE_main>();

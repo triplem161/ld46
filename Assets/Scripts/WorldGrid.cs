@@ -120,7 +120,6 @@ public class WorldGrid : MonoBehaviour {
 				vIncUp++;
 			}
 		}
-
 		Move();
 	}
 
