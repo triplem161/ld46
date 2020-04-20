@@ -126,9 +126,17 @@ public class Alien : MonoBehaviour {
 			pMagnet.MoveTo(grid.CoordToPosition(vPushCoord.x, vPushCoord.y) + new Vector3(0.5f, 0, -0.5f));
 			grid.ChangeIndex(grid.CoordToIndex(pMagnetCoord.x, pMagnetCoord.y), grid.CoordToIndex(vPushCoord.x, vPushCoord.y));
 		}
+		
 		animator.SetBool("hurt", true);
+
+		_camShake.Shake(0.1f);
+		GameObject vParticles = Instantiate(deathParticles.gameObject, pMagnet.transform.position, Quaternion.identity) as GameObject;
+		vParticles.transform.localScale = Vector3.one * 0.5f;
+
+		GetComponent<Rigidbody>().AddForce(Vector3.up * 1.5f);
 		yield return new WaitForSeconds(0.5f);
 		animator.SetBool("hurt", false);
 		StartCoroutine(Idle());
+		
 	}
 }
