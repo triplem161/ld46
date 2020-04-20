@@ -9,9 +9,6 @@ public class SCE_main : MonoBehaviour {
 
 	private int _gridLayer;
 
-	[Header("Game mode")]
-	public bool arcadeMode = false;
-
 	[Header("Cursor")]
 	public Transform attractCursor;
 	public Transform repulseCursor;
@@ -49,7 +46,7 @@ public class SCE_main : MonoBehaviour {
 	}
 
 	private void Start() {
-		if(arcadeMode) {
+		if(Settings.ARCADE_MODE) {
 			_spawnInfinite = true;
 			StartCoroutine(Arcade());
 		}
