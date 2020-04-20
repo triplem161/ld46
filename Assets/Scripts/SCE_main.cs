@@ -166,6 +166,8 @@ public class SCE_main : MonoBehaviour {
 			yield return new WaitForSeconds(0.1f);
 		}
 
+		_spawnInfinite = true;
+
 		yield return new WaitForSeconds(30f);
 
 		tutorial04.SetActive(true);
