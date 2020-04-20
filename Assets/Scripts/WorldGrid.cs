@@ -269,12 +269,23 @@ public class WorldGrid : MonoBehaviour {
 		int vIndex = 0;
 		while (!vIsEmpty) {
 			vIndex = Random.Range(0, _map.Length);
-			vIsEmpty = _map[vIndex] == null && !System.Array.Exists(_indexBlackListed, vEl => vEl == vIndex);
+			vIsEmpty = _map[vIndex] == null && !IsInBlacklist(vIndex);
 		}
 		_map[vIndex] = pToAdd;
 		_map[vIndex].transform.localPosition = IndexToPosition(vIndex) + new Vector3(0.5f, 0, -0.5f);
 		magnetsCount++;
 		CheckLine();
+	}
+
+	private bool IsInBlacklist(int pIndex) {
+		if (_indexBlackListed != null) {
+			for (int i = 0; i < _indexBlackListed.Length; ++i) {
+				if (_indexBlackListed[i] == pIndex) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	private int[] _indexBlackListed;
