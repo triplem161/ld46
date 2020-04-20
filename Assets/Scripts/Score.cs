@@ -7,11 +7,13 @@ public class Score : MonoBehaviour {
 
 	public TMP_Text scoreAmountText;
 	public TMP_Text scoreBonusText;
+	public AnimationCurve bonusTextCurve;
 	[Space]
 	public TMP_Text multiplierText;
 	[Space]
 	public TMP_Text alertText;
 	public AnimationCurve alertTextCurve;
+	public AnimationCurve alertTextScale;
 
 	private List<string> _alertList;
 	private float _alertTimer = 0;
@@ -44,7 +46,7 @@ public class Score : MonoBehaviour {
 
 		StartCoroutine(ShowingBonus(vScoreAdd));
 
-		multiplierText.text = "Bonus x" + pEvent.comboCounter;
+		multiplierText.text = "x" + pEvent.comboCounter;
 
 		if(pEvent.comboCounter > 1) {
 			_alertList.Add("Combo x" + pEvent.comboCounter);
@@ -55,48 +57,41 @@ public class Score : MonoBehaviour {
 		}
 
 		if (pEvent.destroyedMagnet / pEvent.lineDestroyed > 4) {
-			_alertList.Add("Destruction x" + (pEvent.destroyedMagnet / pEvent.lineDestroyed));
+			_alertList.Add("Magnet x" + (pEvent.destroyedMagnet / pEvent.lineDestroyed));
 		}
 
-		// Debug.Log("Line: " + pEvent.lineDestroyed + " ; Magnet: " + pEvent.destroyedMagnet + " ; Combo: " + pEvent.comboCounter);
+		Debug.Log("Line: " + pEvent.destroyedMagnet / pEvent.lineDestroyed); 
 	}
 
 
 	IEnumerator ShowingBonus(int pAmount) {
 		float vEllapsed = 0f;
-		float vDuration = 0.25f;
+		float vDuration = 1f;
 
 		scoreBonusText.text = "+" + pAmount;
 
 		while(vEllapsed < vDuration) {
 			vEllapsed += Time.deltaTime;
-
-			scoreBonusText.transform.localScale = Vector3.one * Mathf.Lerp(0, 1, vEllapsed / vDuration);
-			scoreBonusText.color = Color.Lerp(Color.white, Color.clear, vEllapsed / vDuration);
-
+			scoreBonusText.transform.localScale = Vector3.one * Mathf.Lerp(0, 1, bonusTextCurve.Evaluate(vEllapsed / vDuration));
 			yield return null;
 		}
 
-
+		scoreBonusText.text = " ";
 	}
 
 	IEnumerator AlertProcess() {
 		while(true) {
 			while (_alertList.Count > 0) {
+				Debug.Log("ALERRT");
 				alertText.text = _alertList[0];
 
 				float vEllapsed = 0f;
-
-				float vDuration = 1f;
-
+				float vDuration = 0.75f;
 
 				while (vEllapsed < vDuration) {
 					vEllapsed += Time.deltaTime;
-					alertText.transform.localScale = Vector3.one * Mathf.Lerp(0, 1, vEllapsed / vDuration);
-
+					alertText.transform.localScale = Vector3.one * Mathf.Lerp(0, 1, alertTextScale.Evaluate(vEllapsed / vDuration));
 					alertText.color = Color.Lerp(new Color(1, 1, 1, 1), new Color(1, 1, 1, 0), alertTextCurve.Evaluate(vEllapsed/vDuration));
-
-
 					yield return null;
 				}
 
