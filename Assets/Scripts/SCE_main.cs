@@ -36,6 +36,9 @@ public class SCE_main : MonoBehaviour {
 	[Header("Arcade")]
 	public TMP_Text alertText;
 	public AnimationCurve mainTextAlphaCurve;
+
+	[Header("Game Over")]
+	public GameObject gameOverUI;
 	
 
 	private bool _spawnInfinite = false;
@@ -229,5 +232,11 @@ public class SCE_main : MonoBehaviour {
 	private void SpawnCube(int pIndex) {
 		Magnet vTemp = Instantiate(magnetPrefabs[pIndex]);
 		grid.AddMagnet(vTemp);
+	}
+
+	public void GameOver() {
+		_hasInputs = false;
+		_spawnInfinite = false;
+		gameOverUI.SetActive(true);
 	}
 }

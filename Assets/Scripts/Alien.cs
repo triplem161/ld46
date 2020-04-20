@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Alien : MonoBehaviour {
 
+	public SCE_main manager;
 	public WorldGrid grid;
 	public Animator animator;
 	public SpriteRenderer spriteRenderer;
@@ -18,6 +19,7 @@ public class Alien : MonoBehaviour {
 
 	void Awake() {
 		_magnetLayer = LayerMask.GetMask("MAGNET_COLLISION");
+
 		(int x, int y) vCoord = grid.PositionToCoord(transform.position);
 		Vector3 vLocalPos = grid.CoordToPosition(vCoord.x, vCoord.y) + new Vector3(0.5f, 0f, -0.5f);
 		transform.position = new Vector3(vLocalPos.x, 1f, vLocalPos.z);
@@ -25,6 +27,7 @@ public class Alien : MonoBehaviour {
 		StartCoroutine(Running());
 
 		_camShake = FindObjectOfType<CameraShake>();
+		manager = FindObjectOfType<SCE_main>();
 	}
 
 	public void Expulse(Vector3 pForceDirection) {
@@ -41,6 +44,8 @@ public class Alien : MonoBehaviour {
 		yield return new WaitForSeconds(0.5f);
 		Destroy(gameObject);
 		Instantiate(deathParticles,transform.position,Quaternion.identity);
+
+		manager.GameOver();
 	}
 
 	private IEnumerator Running() {
