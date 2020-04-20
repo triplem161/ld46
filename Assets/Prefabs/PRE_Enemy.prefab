@@ -152,6 +152,8 @@ MonoBehaviour:
   main: {fileID: 0}
   shadow: {fileID: 1671222793588283640}
   spriteRenderer: {fileID: 1030153666657044191}
+  deathParticles: {fileID: 153680425606246680, guid: 00caebfd5139fc64db29d3336886b00a,
+    type: 3}
   speed: 0.7
 --- !u!65 &5665626284617044869
 BoxCollider:

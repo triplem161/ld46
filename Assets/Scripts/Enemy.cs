@@ -7,13 +7,17 @@ public class Enemy : MonoBehaviour {
 	public SCE_main main;
 	public Transform shadow;
 	public SpriteRenderer spriteRenderer;
+	public GameObject deathParticles;
 
 	[Header("Movement")]
 	public float speed = 0.5f;
 
 	private int _magnetLayer;
 
+	private CameraShake _camShake;
+
 	void Awake() {
+		_camShake = FindObjectOfType<CameraShake>();
 		_magnetLayer = LayerMask.GetMask("MAGNET_COLLISION");
 	}
 
@@ -21,12 +25,12 @@ public class Enemy : MonoBehaviour {
 		StartCoroutine(Falling());
 	}
 
-	public void Expulse(Vector3 pForceDirection) {
+	public void Destroy() {
 		StopAllCoroutines();
-		// animator.SetBool("run", false);
-		pForceDirection += Vector3.up * 5;
-		GetComponent<Rigidbody>().AddForce(pForceDirection);
-		StartCoroutine(Dying());
+		_camShake.Shake(0.25f);
+		main.robotsCount--;
+		Instantiate(deathParticles, transform.position, Quaternion.identity);
+		Destroy(gameObject);
 	}
 
 	private IEnumerator Falling() {
@@ -43,14 +47,6 @@ public class Enemy : MonoBehaviour {
 			yield return null;
 		}
 		StartCoroutine(Idle());
-	}
-
-	private IEnumerator Dying() {
-		GetComponent<Collider>().enabled = false;
-		GetComponent<Rigidbody>().detectCollisions = false;
-		main.robotsCount--;
-		yield return new WaitForSeconds(0.5f);
-		Destroy(gameObject);
 	}
 
 	private IEnumerator Running() {
