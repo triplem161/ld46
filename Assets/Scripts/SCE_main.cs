@@ -154,7 +154,13 @@ public class SCE_main : MonoBehaviour {
 
 		tutorial03.SetActive(false);
 
-		_spawnInfinite = true;
+		StartCoroutine(ArcadeTextIntro());
+
+		for (int i = 0; i < 8; i++) {
+			int vRandomCube = Random.Range(0, magnetPrefabs.Length);
+			SpawnCube(vRandomCube);
+			yield return new WaitForSeconds(0.1f);
+		}
 
 		yield return new WaitForSeconds(30f);
 

@@ -1272,7 +1272,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'The robot want to
+  m_text: 'The robot wants to
 
     kill the alien'
   m_isRightToLeft: 0
