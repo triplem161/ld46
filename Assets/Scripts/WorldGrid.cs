@@ -296,7 +296,7 @@ public class WorldGrid : MonoBehaviour {
 	}
 
 	public bool IsEmptyAt(int pX, int pY) {
-		return pX > 0 && pY > 0 && pX < gridWidth && pY < gridHeight && IsEmptyAt(CoordToIndex(pX, pY));
+		return pX >= 0 && pY >= 0 && pX < gridWidth && pY < gridHeight && IsEmptyAt(CoordToIndex(pX, pY));
 	}
 
 	public int CoordToIndex(int pX, int pY) {
