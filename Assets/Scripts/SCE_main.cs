@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class SCE_main : MonoBehaviour {
@@ -7,6 +8,9 @@ public class SCE_main : MonoBehaviour {
 	public WorldGrid grid;
 
 	private int _gridLayer;
+
+	[Header("Game mode")]
+	public bool arcadeMode = false;
 
 	[Header("Cursor")]
 	public Transform attractCursor;
@@ -26,15 +30,70 @@ public class SCE_main : MonoBehaviour {
 	public GameObject tutorial03;
 	public GameObject tutorial04;
 
+	[Header("Arcade")]
+	public TMP_Text mainText;
+	public AnimationCurve mainTextAlphaCurve;
 
 	private bool _spawnInfinite = false;
+	private bool _hasInputs = false;
 
 	void Awake() {
 		_gridLayer = LayerMask.GetMask("GRID_COLLISION");
 	}
 
 	private void Start() {
-		StartCoroutine(Tutorial());
+		if(arcadeMode) {
+			_spawnInfinite = true;
+			StartCoroutine(Arcade());
+		}
+		else {
+			StartCoroutine(Tutorial());
+		}
+		
+	}
+
+	IEnumerator Arcade() {
+		StartCoroutine(ArcadeTextIntro());
+
+		for (int i = 0; i < 8; i++) {
+			int vRandomCube = Random.Range(0, magnetPrefabs.Length);
+			SpawnCube(vRandomCube);
+			yield return new WaitForSeconds(0.1f);
+		}
+
+		//SPAWN ALIEN
+
+		_hasInputs = true;
+	}
+
+	IEnumerator ArcadeTextIntro() {
+		mainText.gameObject.SetActive(true);
+
+		float vEllapsed = 0f;
+		float vDuration = 1f;
+
+		mainText.text = "Ready?";
+
+		while (vEllapsed < vDuration) {
+			vEllapsed += Time.deltaTime;
+			mainText.transform.localScale = Vector3.one * Mathf.Lerp(0, 1, vEllapsed / vDuration);
+			mainText.color = Color.Lerp(new Color(1, 1, 1, 1), new Color(1, 1, 1, 0), mainTextAlphaCurve.Evaluate(vEllapsed / vDuration));
+			yield return null;
+		}
+
+		vEllapsed = 0f;
+		vDuration = 0.5f;
+
+		mainText.text = "START";
+
+		while (vEllapsed < vDuration) {
+			vEllapsed += Time.deltaTime;
+			mainText.transform.localScale = Vector3.one * Mathf.Lerp(0, 1, vEllapsed / vDuration);
+			mainText.color = Color.Lerp(new Color(1, 1, 1, 1), new Color(1, 1, 1, 0), mainTextAlphaCurve.Evaluate(vEllapsed / vDuration));
+			yield return null;
+		}
+
+		mainText.gameObject.SetActive(false);
 	}
 
 	IEnumerator Tutorial() {
@@ -45,9 +104,13 @@ public class SCE_main : MonoBehaviour {
 			yield return new WaitForSeconds(0.5f);
 		}
 
-		while(grid.magnetsCount > 0) {
+		_hasInputs = true;
+
+		while (grid.magnetsCount > 0) {
 			yield return null;
 		}
+
+		_hasInputs = false;
 
 		tutorial01.SetActive(false);
 
@@ -69,6 +132,8 @@ public class SCE_main : MonoBehaviour {
 			SpawnCube(2);
 			yield return new WaitForSeconds(0.2f);
 		}
+
+		_hasInputs = true;
 
 		while (grid.magnetsCount > 0) {
 			yield return null;
@@ -96,7 +161,8 @@ public class SCE_main : MonoBehaviour {
 	}
 
 	void Update() {
-		Inputs();
+		if(_hasInputs)
+			Inputs();
 
 		if(_spawnInfinite)
 			Spawner();
