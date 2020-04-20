@@ -9,9 +9,6 @@ public class WorldGrid : MonoBehaviour {
 	public int gridWidth;
 	public int gridHeight;
 
-	[Header("Debug")]
-	public Renderer debugRenderer;
-
 	[HideInInspector]
 	public int magnetsCount;
 
@@ -28,7 +25,6 @@ public class WorldGrid : MonoBehaviour {
 
 	void OnValidate() {
 		transform.localScale = new Vector3(gridWidth / MESH_UNIT, 1, gridHeight / MESH_UNIT);
-		debugRenderer.material.SetVector("GRID_SIZE", new Vector4(gridWidth, gridHeight, 0, 0));
 	}
 
 	public void PullOrder(Vector3 pClickPosition) {
@@ -310,7 +306,6 @@ public class WorldGrid : MonoBehaviour {
 	}
 
 	private string GridToString() {
-		Debug.ClearDeveloperConsole();
 		string vToReturn = "";
 		for (int i = 0; i < _map.Length; ++i) {
 			if (i % gridWidth == 0) {

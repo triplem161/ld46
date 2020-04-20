@@ -14,7 +14,10 @@ public class Alien : MonoBehaviour {
 
 	private CameraShake _camShake;
 
+	private int _magnetLayer;
+
 	void Awake() {
+		_magnetLayer = LayerMask.GetMask("MAGNET_COLLISION");
 		(int x, int y) vCoord = grid.PositionToCoord(transform.position);
 		Vector3 vLocalPos = grid.CoordToPosition(vCoord.x, vCoord.y) + new Vector3(0.5f, 0f, -0.5f);
 		transform.position = new Vector3(vLocalPos.x, 1f, vLocalPos.z);
@@ -23,9 +26,9 @@ public class Alien : MonoBehaviour {
 		_camShake = FindObjectOfType<CameraShake>();
 	}
 
-	// void Update() {
+	void Update() {
 
-	// }
+	}
 
 	public void Expulse(Vector3 pForceDirection) {
 		StopAllCoroutines();
@@ -48,18 +51,18 @@ public class Alien : MonoBehaviour {
 		Vector3 vEndPos = new Vector3(0.5f, 0.5f, -0.5f);
 		bool vIsUp = (Random.value < 0.5f) ? true : false;
 		int vSquareCount = 0;
+		int vRandomX = vCoord.x;
+		int vRandomY = vCoord.y;
 		if (vIsUp) {
 			spriteRenderer.flipX = false;
-			bool vIsGoingUp = Random.value < 0.5f;
-			int vRandomY = Random.Range(0, grid.gridHeight);
+			// vRandomY = Random.Range(0, grid.gridHeight);
 			while (vRandomY == vCoord.y) {
 				vRandomY = Random.Range(0, grid.gridHeight);
 			}
 			vSquareCount = Mathf.Abs(vRandomY - vCoord.y);
 			vEndPos += grid.CoordToPosition(vCoord.x, vRandomY);
 		} else {
-			bool vIsGoingRight = Random.value < 0.5f;
-			int vRandomX = Random.Range(0, grid.gridWidth);
+			// vRandomX = Random.Range(0, grid.gridWidth);
 			while (vRandomX == vCoord.x) {
 				vRandomX = Random.Range(0, grid.gridWidth);
 			}
@@ -68,15 +71,31 @@ public class Alien : MonoBehaviour {
 			spriteRenderer.flipX = vRandomX > vCoord.x;
 		}
 
-
 		Vector3 vStartPos = transform.position;
+		Vector3 vDirection = (vEndPos - vStartPos).normalized;
+
 		float vDuration = vSquareCount;
 		float vEllapsed = 0;
 
 		runParticles.Play();
 		animator.SetBool("run", true);
+
+		RaycastHit vHit = new RaycastHit();
+		bool vHasFoundMagnet = false;
+		// bool vQuickIdle = false;
 		while (vEllapsed < vDuration) {
 			transform.position = Vector3.Lerp(vStartPos, vEndPos, vEllapsed / vDuration);
+			if (Physics.Raycast(transform.position, vDirection, out vHit, 1.2f, _magnetLayer) && !vHasFoundMagnet) {
+				(int x, int y) vMagnetCoord = grid.PositionToCoord(vHit.point);
+				(int x, int y) vNewEndCoord = (vMagnetCoord.x - (int)vDirection.x, vMagnetCoord.y + (int)vDirection.z);
+
+				int vCellDistance = Mathf.Abs((vRandomX - vNewEndCoord.x) + (vRandomY - vNewEndCoord.y));
+				vEndPos = grid.CoordToPosition(vNewEndCoord.x, vNewEndCoord.y) + new Vector3(0.5f, 0.5f, -0.5f);
+
+				vDuration -= vCellDistance;
+				// vQuickIdle = vCellDistance <= 0;
+				vHasFoundMagnet = true;
+			}
 			vEllapsed += Time.deltaTime;
 			yield return null;
 		}
@@ -87,7 +106,7 @@ public class Alien : MonoBehaviour {
 	}
 
 	private IEnumerator Idle() {
-		yield return new WaitForSeconds(1f);
+		yield return new WaitForSeconds(1);
 		StartCoroutine(Running());
 	}
 
