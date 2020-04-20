@@ -7,6 +7,7 @@ public class Score : MonoBehaviour {
 
 	public TMP_Text scoreAmountText;
 	public TMP_Text scoreBonusText;
+	public AnimationCurve bonusTextCurve;
 	[Space]
 	public TMP_Text multiplierText;
 	[Space]
@@ -45,7 +46,7 @@ public class Score : MonoBehaviour {
 
 		StartCoroutine(ShowingBonus(vScoreAdd));
 
-		multiplierText.text = "Bonus x" + pEvent.comboCounter;
+		multiplierText.text = "x" + pEvent.comboCounter;
 
 		if(pEvent.comboCounter > 1) {
 			_alertList.Add("Combo x" + pEvent.comboCounter);
@@ -65,20 +66,17 @@ public class Score : MonoBehaviour {
 
 	IEnumerator ShowingBonus(int pAmount) {
 		float vEllapsed = 0f;
-		float vDuration = 0.25f;
+		float vDuration = 1f;
 
 		scoreBonusText.text = "+" + pAmount;
 
 		while(vEllapsed < vDuration) {
 			vEllapsed += Time.deltaTime;
-
-			scoreBonusText.transform.localScale = Vector3.one * Mathf.Lerp(0, 1, vEllapsed / vDuration);
-			scoreBonusText.color = Color.Lerp(Color.white, Color.clear, vEllapsed / vDuration);
-
+			scoreBonusText.transform.localScale = Vector3.one * Mathf.Lerp(0, 1, bonusTextCurve.Evaluate(vEllapsed / vDuration));
 			yield return null;
 		}
 
-
+		scoreBonusText.text = " ";
 	}
 
 	IEnumerator AlertProcess() {

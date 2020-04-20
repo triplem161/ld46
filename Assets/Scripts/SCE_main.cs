@@ -20,13 +20,86 @@ public class SCE_main : MonoBehaviour {
 	private int _magnetsCount = 0;
 	private float _magnetSpawnEllapsed;
 
+	[Header("Tutorial")]
+	public GameObject tutorial01;
+	public GameObject tutorial02;
+	public GameObject tutorial03;
+	public GameObject tutorial04;
+
+
+	private bool _spawnInfinite = false;
+
 	void Awake() {
 		_gridLayer = LayerMask.GetMask("GRID_COLLISION");
 	}
 
+	private void Start() {
+		StartCoroutine(Tutorial());
+	}
+
+	IEnumerator Tutorial() {
+		tutorial01.SetActive(true);
+
+		for(int i=0;i<4;i++) {
+			SpawnCube(1);
+			yield return new WaitForSeconds(0.5f);
+		}
+
+		while(grid.magnetsCount > 0) {
+			yield return null;
+		}
+
+		tutorial01.SetActive(false);
+
+		yield return new WaitForSeconds(0.5f);
+
+		tutorial02.SetActive(true);
+
+		for (int i = 0; i < 4; i++) {
+			SpawnCube(0);
+			yield return new WaitForSeconds(0.2f);
+		}
+
+		for (int i = 0; i < 4; i++) {
+			SpawnCube(1);
+			yield return new WaitForSeconds(0.2f);
+		}
+
+		for (int i = 0; i < 4; i++) {
+			SpawnCube(2);
+			yield return new WaitForSeconds(0.2f);
+		}
+
+		while (grid.magnetsCount > 0) {
+			yield return null;
+		}
+
+		tutorial02.SetActive(false);
+
+		yield return new WaitForSeconds(0.5f);
+
+		tutorial03.SetActive(true);
+
+		yield return new WaitForSeconds(5f);
+
+		tutorial03.SetActive(false);
+
+		_spawnInfinite = true;
+
+		yield return new WaitForSeconds(30f);
+
+		tutorial04.SetActive(true);
+
+		yield return new WaitForSeconds(5f);
+
+		tutorial03.SetActive(false);
+	}
+
 	void Update() {
 		Inputs();
-		Spawner();
+
+		if(_spawnInfinite)
+			Spawner();
 	}
 
 	private void Inputs() {
@@ -66,14 +139,17 @@ public class SCE_main : MonoBehaviour {
 	private void Spawner() {
 		if (_magnetSpawnEllapsed > magnetSpawnTimer) {
 			if (grid.magnetsCount < maxMagnet) {
-				_magnetsCount++;
 				int vRandomCube = Random.Range(0, magnetPrefabs.Length);
-				Magnet vTemp = Instantiate(magnetPrefabs[vRandomCube]);
-				grid.AddMagnet(vTemp);
+				SpawnCube(vRandomCube);
 			}
 
 			_magnetSpawnEllapsed = 0;
 		}
 		_magnetSpawnEllapsed += Time.deltaTime;
+	}
+
+	private void SpawnCube(int pIndex) {
+		Magnet vTemp = Instantiate(magnetPrefabs[pIndex]);
+		grid.AddMagnet(vTemp);
 	}
 }

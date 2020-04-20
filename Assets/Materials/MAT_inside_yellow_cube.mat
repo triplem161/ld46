@@ -29,7 +29,7 @@ Material:
     - _move_speed: 1
     - _speed: 1
     m_Colors:
-    - Color_65829385: {r: 0, g: 0.69985485, b: 1, a: 1}
+    - Color_65829385: {r: 0.3915094, g: 0.94044274, b: 1, a: 1}
     - Vector2_9D36F4AA: {r: 0, g: 0, b: 0, a: 0}
     - _random_emission_seed: {r: 0, g: 0, b: 0, a: 0}
     - _random_speed_seed: {r: 0, g: 0, b: 0, a: 0}
