@@ -12,6 +12,7 @@ public class Score : MonoBehaviour {
 	[Space]
 	public TMP_Text alertText;
 	public AnimationCurve alertTextCurve;
+	public AnimationCurve alertTextScale;
 
 	private List<string> _alertList;
 	private float _alertTimer = 0;
@@ -55,7 +56,7 @@ public class Score : MonoBehaviour {
 		}
 
 		if (pEvent.destroyedMagnet / pEvent.lineDestroyed > 4) {
-			_alertList.Add("Destruction x" + (pEvent.destroyedMagnet / pEvent.lineDestroyed));
+			_alertList.Add("Magnet x" + (pEvent.destroyedMagnet / pEvent.lineDestroyed));
 		}
 
 		Debug.Log("Line: " + pEvent.lineDestroyed + " ; Magnet: " + pEvent.destroyedMagnet + " ; Combo: " + pEvent.comboCounter); 
@@ -87,12 +88,12 @@ public class Score : MonoBehaviour {
 
 				float vEllapsed = 0f;
 				
-				float vDuration = 1f;
+				float vDuration = 0.75f;
 
 
 				while (vEllapsed < vDuration) {
 					vEllapsed += Time.deltaTime;
-					alertText.transform.localScale = Vector3.one * Mathf.Lerp(0, 1, vEllapsed / vDuration);
+					alertText.transform.localScale = Vector3.one * Mathf.Lerp(0, 1, alertTextScale.Evaluate(vEllapsed / vDuration));
 
 					alertText.color = Color.Lerp(new Color(1, 1, 1, 1), new Color(1, 1, 1, 0), alertTextCurve.Evaluate(vEllapsed/vDuration));
 					
