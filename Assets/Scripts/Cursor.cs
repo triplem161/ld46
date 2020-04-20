@@ -8,6 +8,10 @@ public class Cursor : MonoBehaviour {
     [Space]
     public Transform cursorX;
     public Transform cursorZ;
+    [Space]
+    public Color neutralColor;
+    public Color attractColor;
+    public Color repulseColor;
 
     private int _gridLayer;
 
@@ -38,5 +42,23 @@ public class Cursor : MonoBehaviour {
             cursorX.gameObject.SetActive(false);
             cursorZ.gameObject.SetActive(false);
         }
+    }
+
+    public void Attract() {
+        StartCoroutine(ChangingColor(attractColor));
+    }
+
+    public void Repulse() {
+        StartCoroutine(ChangingColor(repulseColor));
+    }
+
+    IEnumerator ChangingColor(Color pColor) {
+        cursorX.GetComponent<Renderer>().material.SetColor("_BaseColor", pColor);
+        cursorZ.GetComponent<Renderer>().material.SetColor("_BaseColor", pColor);
+
+        yield return new WaitForSeconds(0.25f);
+
+        cursorX.GetComponent<Renderer>().material.SetColor("_BaseColor", neutralColor);
+        cursorZ.GetComponent<Renderer>().material.SetColor("_BaseColor", neutralColor);
     }
 }

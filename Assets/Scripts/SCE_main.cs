@@ -11,6 +11,7 @@ public class SCE_main : MonoBehaviour {
 	[Header("Cursor")]
 	public Transform attractCursor;
 	public Transform repulseCursor;
+	public Cursor cursorVisuals;
 
 	[Header("Magnet Spawner")]
 	public Magnet[] magnetPrefabs;
@@ -40,6 +41,7 @@ public class SCE_main : MonoBehaviour {
 				attractCursor.gameObject.SetActive(false);
 				attractCursor.gameObject.SetActive(true);
 				grid.PullOrder(vHit.point);
+				cursorVisuals.Attract();
 			} else {
 				attractCursor.transform.position = Vector3.down;
 			}
@@ -54,6 +56,7 @@ public class SCE_main : MonoBehaviour {
 				repulseCursor.gameObject.SetActive(false);
 				repulseCursor.gameObject.SetActive(true);
 				grid.PushOrder(vHit.point);
+				cursorVisuals.Repulse();
 			} else {
 				repulseCursor.transform.position = Vector3.down;
 			}
