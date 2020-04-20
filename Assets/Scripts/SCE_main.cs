@@ -19,10 +19,16 @@ public class SCE_main : MonoBehaviour {
 
 	[Header("Magnet Spawner")]
 	public Magnet[] magnetPrefabs;
-	public float magnetSpawnTimer = 3;
+	public float initMagnetSpawnTimer = 3;
+	public float endMagnetSpawnTimer = 1;
+	private float _magnetSpawnTimer = 0;
 	public int maxMagnet = 5;
 	private int _magnetsCount = 0;
 	private float _magnetSpawnEllapsed;
+	[Space]
+	public float durationBeforeMaxSpawnRate = 120;
+	private float _spawnRateTimer = 0;
+	private float _initSpawnTimer = 0;
 
 	[Header("Tutorial")]
 	public GameObject tutorial01;
@@ -31,8 +37,9 @@ public class SCE_main : MonoBehaviour {
 	public GameObject tutorial04;
 
 	[Header("Arcade")]
-	public TMP_Text mainText;
+	public TMP_Text alertText;
 	public AnimationCurve mainTextAlphaCurve;
+	
 
 	private bool _spawnInfinite = false;
 	private bool _hasInputs = false;
@@ -67,33 +74,31 @@ public class SCE_main : MonoBehaviour {
 	}
 
 	IEnumerator ArcadeTextIntro() {
-		mainText.gameObject.SetActive(true);
 
 		float vEllapsed = 0f;
 		float vDuration = 1f;
 
-		mainText.text = "Ready?";
+		alertText.text = "Ready?";
 
 		while (vEllapsed < vDuration) {
 			vEllapsed += Time.deltaTime;
-			mainText.transform.localScale = Vector3.one * Mathf.Lerp(0, 1, vEllapsed / vDuration);
-			mainText.color = Color.Lerp(new Color(1, 1, 1, 1), new Color(1, 1, 1, 0), mainTextAlphaCurve.Evaluate(vEllapsed / vDuration));
+			alertText.transform.localScale = Vector3.one * Mathf.Lerp(0, 1, vEllapsed / vDuration);
+			alertText.color = Color.Lerp(new Color(1, 1, 1, 1), new Color(1, 1, 1, 0), mainTextAlphaCurve.Evaluate(vEllapsed / vDuration));
 			yield return null;
 		}
 
 		vEllapsed = 0f;
 		vDuration = 0.5f;
 
-		mainText.text = "START";
+		alertText.text = "START";
 
 		while (vEllapsed < vDuration) {
 			vEllapsed += Time.deltaTime;
-			mainText.transform.localScale = Vector3.one * Mathf.Lerp(0, 1, vEllapsed / vDuration);
-			mainText.color = Color.Lerp(new Color(1, 1, 1, 1), new Color(1, 1, 1, 0), mainTextAlphaCurve.Evaluate(vEllapsed / vDuration));
+			alertText.transform.localScale = Vector3.one * Mathf.Lerp(0, 1, vEllapsed / vDuration);
+			alertText.color = Color.Lerp(new Color(1, 1, 1, 1), new Color(1, 1, 1, 0), mainTextAlphaCurve.Evaluate(vEllapsed / vDuration));
 			yield return null;
 		}
 
-		mainText.gameObject.SetActive(false);
 	}
 
 	IEnumerator Tutorial() {
@@ -164,8 +169,11 @@ public class SCE_main : MonoBehaviour {
 		if(_hasInputs)
 			Inputs();
 
-		if(_spawnInfinite)
+		if(_spawnInfinite) {
+			ManageSpawnTime();
 			Spawner();
+		}
+			
 	}
 
 	private void Inputs() {
@@ -202,8 +210,15 @@ public class SCE_main : MonoBehaviour {
 		}
 	}
 
+	private void ManageSpawnTime() {
+		if(_spawnRateTimer < durationBeforeMaxSpawnRate) {
+			_spawnRateTimer += Time.deltaTime;
+			_magnetSpawnTimer = Mathf.Lerp(initMagnetSpawnTimer, endMagnetSpawnTimer, _spawnRateTimer / durationBeforeMaxSpawnRate);
+		}
+	}
+
 	private void Spawner() {
-		if (_magnetSpawnEllapsed > magnetSpawnTimer) {
+		if (_magnetSpawnEllapsed > _magnetSpawnTimer) {
 			if (grid.magnetsCount < maxMagnet) {
 				int vRandomCube = Random.Range(0, magnetPrefabs.Length);
 				SpawnCube(vRandomCube);

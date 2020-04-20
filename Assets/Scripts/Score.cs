@@ -60,7 +60,7 @@ public class Score : MonoBehaviour {
 			_alertList.Add("Magnet x" + (pEvent.destroyedMagnet / pEvent.lineDestroyed));
 		}
 
-		Debug.Log("Line: " + pEvent.lineDestroyed + " ; Magnet: " + pEvent.destroyedMagnet + " ; Combo: " + pEvent.comboCounter); 
+		Debug.Log("Line: " + pEvent.destroyedMagnet / pEvent.lineDestroyed); 
 	}
 
 
@@ -82,20 +82,16 @@ public class Score : MonoBehaviour {
 	IEnumerator AlertProcess() {
 		while(true) {
 			while (_alertList.Count > 0) {
+				Debug.Log("ALERRT");
 				alertText.text = _alertList[0];
 
 				float vEllapsed = 0f;
-				
 				float vDuration = 0.75f;
-
 
 				while (vEllapsed < vDuration) {
 					vEllapsed += Time.deltaTime;
 					alertText.transform.localScale = Vector3.one * Mathf.Lerp(0, 1, alertTextScale.Evaluate(vEllapsed / vDuration));
-
 					alertText.color = Color.Lerp(new Color(1, 1, 1, 1), new Color(1, 1, 1, 0), alertTextCurve.Evaluate(vEllapsed/vDuration));
-					
-					
 					yield return null;
 				}
 
