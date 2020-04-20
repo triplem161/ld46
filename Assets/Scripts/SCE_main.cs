@@ -254,7 +254,7 @@ public class SCE_main : MonoBehaviour {
 
 		// ROBOT
 		if (_robotSpawnEllapsed > _robotSpawnTimer) {
-			if (robotsCount < maxMagnet) {
+			if (robotsCount < maxRobot) {
 				SpawnRobot();
 				robotsCount++;
 			}

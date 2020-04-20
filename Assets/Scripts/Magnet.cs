@@ -60,7 +60,7 @@ public class Magnet : MonoBehaviour {
 	void OnCollisionEnter(Collision pOther) {
 		Vector3 vDirection = -(pOther.transform.position - transform.position).normalized;
 		pOther.gameObject.GetComponent<Alien>()?.Expulse(vDirection * 20f);
-		pOther.gameObject.GetComponent<Enemy>()?.Expulse(vDirection * 20f);
+		pOther.gameObject.GetComponent<Enemy>()?.Expulse(vDirection);
 	}
 
 	public void MoveTo(Vector3 pPosition) {

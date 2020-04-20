@@ -47,6 +47,7 @@ public class Enemy : MonoBehaviour {
 
 	private IEnumerator Dying() {
 		GetComponent<Collider>().enabled = false;
+		GetComponent<Rigidbody>().detectCollisions = false;
 		main.robotsCount--;
 		yield return new WaitForSeconds(0.5f);
 		Destroy(gameObject);
@@ -86,13 +87,15 @@ public class Enemy : MonoBehaviour {
 		Magnet vMagnetToPush = null;
 		while (vEllapsed < vDuration) {
 			transform.position = Vector3.Lerp(vStartPos, vEndPos, vEllapsed / vDuration);
-			if (Physics.Raycast(transform.position, vDirection, out vHit, 1.2f, _magnetLayer) && vHasFoundMagnet) {
+			if (Physics.Raycast(transform.position, vDirection, out vHit, 1.2f, _magnetLayer) && !vHasFoundMagnet) {
 				vMagnetToPush = vHit.collider.GetComponent<Magnet>();
 				if (!vMagnetToPush.isMoving) {
 					(int x, int y) vMagnetCoord = grid.PositionToCoord(vHit.point);
 					(int x, int y) vNewEndCoord = (vMagnetCoord.x - (int)vDirection.x, vMagnetCoord.y + (int)vDirection.z);
 					int vCellDistance = Mathf.Abs((vRandomX - vNewEndCoord.x) + (vRandomY - vNewEndCoord.y));
+					Debug.Log("old destination: " + vEndPos);
 					vEndPos = grid.CoordToPosition(vNewEndCoord.x, vNewEndCoord.y) + new Vector3(0.5f, 0.5f, -0.5f);
+					Debug.Log("new destination: " + vEndPos);
 					vDuration -= vCellDistance * speed;
 					vHasFoundMagnet = true;
 				}
