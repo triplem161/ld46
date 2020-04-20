@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Score : MonoBehaviour
-{
-    private void OnEnable() {
-        
-    }
+public class Score : MonoBehaviour {
 
-    private void OnDisable() {
-        
-    }
+	private void OnEnable() {
+		EventsManager.Instance.StartListening<ScoreEvent>("score:update", UpdateScore);
+	}
 
-    private void UpdateScore(ScoreEvent pEvent) {
-        
-    }
+	private void OnDisable() {
+		EventsManager.Instance.StopListening<ScoreEvent>("score:update", UpdateScore);
+	}
+
+	private void UpdateScore(ScoreEvent pEvent) {
+
+	}
 }

@@ -23,6 +23,10 @@ public class Alien : MonoBehaviour {
 		_camShake = FindObjectOfType<CameraShake>();
 	}
 
+	// void Update() {
+
+	// }
+
 	public void Expulse(Vector3 pForceDirection) {
 		StopAllCoroutines();
 		animator.SetBool("run", false);
