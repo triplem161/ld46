@@ -21,13 +21,10 @@ public class Alien : MonoBehaviour {
 		(int x, int y) vCoord = grid.PositionToCoord(transform.position);
 		Vector3 vLocalPos = grid.CoordToPosition(vCoord.x, vCoord.y) + new Vector3(0.5f, 0f, -0.5f);
 		transform.position = new Vector3(vLocalPos.x, 1f, vLocalPos.z);
+		grid.CeilBlackList(vCoord.x, vCoord.y, new Vector2Int(0, 0), 1);
 		StartCoroutine(Running());
 
 		_camShake = FindObjectOfType<CameraShake>();
-	}
-
-	void Update() {
-
 	}
 
 	public void Expulse(Vector3 pForceDirection) {
@@ -74,6 +71,8 @@ public class Alien : MonoBehaviour {
 		Vector3 vStartPos = transform.position;
 		Vector3 vDirection = (vEndPos - vStartPos).normalized;
 
+		grid.CeilBlackList(vCoord.x, vCoord.y, new Vector2Int((int)vDirection.x, (int)vDirection.z), 4);
+
 		float vDuration = vSquareCount;
 		float vEllapsed = 0;
 
@@ -90,17 +89,19 @@ public class Alien : MonoBehaviour {
 			transform.position = Vector3.Lerp(vStartPos, vEndPos, vEllapsed / vDuration);
 			if (Physics.Raycast(transform.position, vDirection, out vHit, 1.2f, _magnetLayer) && !vHasFoundMagnet) {
 				vMagnetToPush = vHit.collider.GetComponent<Magnet>();
-				vMagnetCoord = grid.PositionToCoord(vHit.point);
-				(int x, int y) vNewEndCoord = (vMagnetCoord.x - (int)vDirection.x, vMagnetCoord.y + (int)vDirection.z);
+				if (!vMagnetToPush.isMoving) {
+					vMagnetCoord = grid.PositionToCoord(vHit.point);
+					(int x, int y) vNewEndCoord = (vMagnetCoord.x - (int)vDirection.x, vMagnetCoord.y + (int)vDirection.z);
 
-				int vCellDistance = Mathf.Abs((vRandomX - vNewEndCoord.x) + (vRandomY - vNewEndCoord.y));
-				vEndPos = grid.CoordToPosition(vNewEndCoord.x, vNewEndCoord.y) + new Vector3(0.5f, 0.5f, -0.5f);
+					int vCellDistance = Mathf.Abs((vRandomX - vNewEndCoord.x) + (vRandomY - vNewEndCoord.y));
+					vEndPos = grid.CoordToPosition(vNewEndCoord.x, vNewEndCoord.y) + new Vector3(0.5f, 0.5f, -0.5f);
 
-				vDuration -= vCellDistance;
-				// vQuickIdle = vCellDistance <= 0;
-				vHasFoundMagnet = true;
+					vDuration -= vCellDistance;
+					// vQuickIdle = vCellDistance <= 0;
+					vHasFoundMagnet = true;
 
-				vPushMagnet = vCellDistance > 0;
+					vPushMagnet = vCellDistance > 0;
+				}
 			}
 			vEllapsed += Time.deltaTime;
 			yield return null;
@@ -116,19 +117,23 @@ public class Alien : MonoBehaviour {
 	}
 
 	private IEnumerator Idle() {
+		(int x, int y) vCoord = grid.PositionToCoord(transform.position);
+		grid.CeilBlackList(vCoord.x, vCoord.y, new Vector2Int(0, 0), 1);
 		yield return new WaitForSeconds(1);
 		StartCoroutine(Running());
 	}
 
 	private IEnumerator PushMagnet(Magnet pMagnet, Vector3 pDirection, (int x, int y) pMagnetCoord) {
-		(int x, int y) vPushCoord = (pMagnetCoord.x + (int)pDirection.x, pMagnetCoord.y - (int)pDirection.z);
-		if (grid.IsEmptyAt(vPushCoord.x, vPushCoord.y)) {
-			pMagnet.MoveTo(grid.CoordToPosition(vPushCoord.x, vPushCoord.y) + new Vector3(0.5f, 0, -0.5f));
-			grid.ChangeIndex(grid.CoordToIndex(pMagnetCoord.x, pMagnetCoord.y), grid.CoordToIndex(vPushCoord.x, vPushCoord.y));
+		if (!pMagnet.isMoving) {
+			(int x, int y) vPushCoord = (pMagnetCoord.x + (int)pDirection.x, pMagnetCoord.y - (int)pDirection.z);
+			if (grid.IsEmptyAt(vPushCoord.x, vPushCoord.y)) {
+				pMagnet.MoveTo(grid.CoordToPosition(vPushCoord.x, vPushCoord.y) + new Vector3(0.5f, 0, -0.5f));
+				grid.ChangeIndex(grid.CoordToIndex(pMagnetCoord.x, pMagnetCoord.y), grid.CoordToIndex(vPushCoord.x, vPushCoord.y));
+			}
+			animator.SetBool("hurt", true);
+			yield return new WaitForSeconds(0.5f);
+			animator.SetBool("hurt", false);
 		}
-		animator.SetBool("hurt", true);
-		yield return new WaitForSeconds(0.5f);
-		animator.SetBool("hurt", false);
 		StartCoroutine(Idle());
 	}
 }

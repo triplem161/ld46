@@ -6,6 +6,9 @@ public class Magnet : MonoBehaviour {
 	public MAGNET_COLOR color;
 
 	public MeshRenderer cubeRenderer;
+
+	public bool isMoving;
+
 	private Transform cubeMeshTransform;
 
 	public ParticleSystem DeathParticles;
@@ -73,11 +76,13 @@ public class Magnet : MonoBehaviour {
 		float vDuration = 0.2f;
 		float vEllapsed = 0;
 
+		isMoving = true;
 		while (vEllapsed < vDuration) {
 			transform.position = Vector3.Lerp(vStart, vEnd, vEllapsed / vDuration);
 			vEllapsed += Time.deltaTime;
 			yield return null;
 		}
+		isMoving = false;
 		transform.position = vEnd;
 	}
 

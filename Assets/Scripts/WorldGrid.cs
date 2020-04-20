@@ -268,12 +268,22 @@ public class WorldGrid : MonoBehaviour {
 		int vIndex = 0;
 		while (!vIsEmpty) {
 			vIndex = Random.Range(0, _map.Length);
-			vIsEmpty = _map[vIndex] == null;
+			vIsEmpty = _map[vIndex] == null && !System.Array.Exists(_indexBlackListed, vEl => vEl == vIndex);
 		}
 		_map[vIndex] = pToAdd;
 		_map[vIndex].transform.localPosition = IndexToPosition(vIndex) + new Vector3(0.5f, 0, -0.5f);
 		magnetsCount++;
 		CheckLine();
+	}
+
+	private int[] _indexBlackListed;
+	public void CeilBlackList(int pX, int pY, Vector2Int pDirection, int pCount) {
+		_indexBlackListed = new int[pCount];
+		for (int i = 0; i < _indexBlackListed.Length; i++) {
+			int vX = pX + pDirection.x * i;
+			int vY = pY - pDirection.y * i;
+			_indexBlackListed[i] = CoordToIndex(vX, vY);
+		}
 	}
 
 	public void ChangeIndex(int pOld, int pNew) {
@@ -286,7 +296,7 @@ public class WorldGrid : MonoBehaviour {
 	}
 
 	public bool IsEmptyAt(int pX, int pY) {
-		return IsEmptyAt(CoordToIndex(pX, pY));
+		return pX < gridWidth && pY < gridHeight && IsEmptyAt(CoordToIndex(pX, pY));
 	}
 
 	public int CoordToIndex(int pX, int pY) {
