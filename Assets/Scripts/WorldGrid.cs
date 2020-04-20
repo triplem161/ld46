@@ -257,9 +257,11 @@ public class WorldGrid : MonoBehaviour {
 		EventsManager.Instance.Trigger<ScoreEvent>("score:update", new ScoreEvent(pList.Count, _comboCounter, _lineDestroyed));
 		_lineDestroyed = 0;
 		foreach (int vIndex in pList) {
-			_map[vIndex].Destroy();
-			magnetsCount--;
-			_map[vIndex] = null;
+			if (_map[vIndex] != null) {
+				_map[vIndex].Destroy();
+				magnetsCount--;
+				_map[vIndex] = null;
+			}
 		}
 	}
 
