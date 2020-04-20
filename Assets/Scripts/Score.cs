@@ -60,7 +60,7 @@ public class Score : MonoBehaviour {
 			_alertList.Add("Magnet x" + (pEvent.destroyedMagnet / pEvent.lineDestroyed));
 		}
 
-		Debug.Log("Line: " + pEvent.destroyedMagnet / pEvent.lineDestroyed); 
+		// Debug.Log("Line: " + pEvent.destroyedMagnet / pEvent.lineDestroyed);
 	}
 
 
@@ -82,7 +82,7 @@ public class Score : MonoBehaviour {
 	IEnumerator AlertProcess() {
 		while(true) {
 			while (_alertList.Count > 0) {
-				Debug.Log("ALERRT");
+				// Debug.Log("ALERRT");
 				alertText.text = _alertList[0];
 
 				float vEllapsed = 0f;

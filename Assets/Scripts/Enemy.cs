@@ -93,9 +93,7 @@ public class Enemy : MonoBehaviour {
 					(int x, int y) vMagnetCoord = grid.PositionToCoord(vHit.point);
 					(int x, int y) vNewEndCoord = (vMagnetCoord.x - (int)vDirection.x, vMagnetCoord.y + (int)vDirection.z);
 					int vCellDistance = Mathf.Abs((vRandomX - vNewEndCoord.x) + (vRandomY - vNewEndCoord.y));
-					Debug.Log("old destination: " + vEndPos);
 					vEndPos = grid.CoordToPosition(vNewEndCoord.x, vNewEndCoord.y) + new Vector3(0.5f, 0.5f, -0.5f);
-					Debug.Log("new destination: " + vEndPos);
 					vDuration -= vCellDistance * speed;
 					vHasFoundMagnet = true;
 				}
