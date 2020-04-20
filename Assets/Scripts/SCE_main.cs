@@ -17,6 +17,9 @@ public class SCE_main : MonoBehaviour {
 	[Header("Alien")]
 	public Alien alien;
 
+	[Header("Robot")]
+	public Enemy robot;
+
 	[Header("Magnet Spawner")]
 	public Magnet[] magnetPrefabs;
 	public float initMagnetSpawnTimer = 3;
@@ -29,6 +32,14 @@ public class SCE_main : MonoBehaviour {
 	public float durationBeforeMaxSpawnRate = 120;
 	private float _spawnRateTimer = 0;
 	private float _initSpawnTimer = 0;
+
+	[Header("Robot Spawner")]
+	public float initRobotSpawnTimer = 3;
+	public float endRobotSpawnTimer = 1;
+	private float _robotSpawnTimer = 0;
+	public int maxRobot = 5;
+	public int robotsCount = 0;
+	private float _robotSpawnEllapsed;
 
 	[Header("Tutorial")]
 	public GameObject tutorial01;
@@ -226,6 +237,7 @@ public class SCE_main : MonoBehaviour {
 		if(_spawnRateTimer < durationBeforeMaxSpawnRate) {
 			_spawnRateTimer += Time.deltaTime;
 			_magnetSpawnTimer = Mathf.Lerp(initMagnetSpawnTimer, endMagnetSpawnTimer, _spawnRateTimer / durationBeforeMaxSpawnRate);
+			_robotSpawnTimer = Mathf.Lerp(initRobotSpawnTimer, endRobotSpawnTimer, _spawnRateTimer / durationBeforeMaxSpawnRate);
 		}
 	}
 
@@ -239,6 +251,16 @@ public class SCE_main : MonoBehaviour {
 			_magnetSpawnEllapsed = 0;
 		}
 		_magnetSpawnEllapsed += Time.deltaTime;
+
+		// ROBOT
+		if (_robotSpawnEllapsed > _robotSpawnTimer) {
+			if (robotsCount < maxMagnet) {
+				SpawnRobot();
+				robotsCount++;
+			}
+			_robotSpawnEllapsed = 0;
+		}
+		_robotSpawnEllapsed += Time.deltaTime;
 	}
 
 	private void SpawnCube(int pIndex) {
@@ -254,6 +276,18 @@ public class SCE_main : MonoBehaviour {
 		alien.gameObject.SetActive(true);
 		alien.transform.position = grid.IndexToPosition(vRandomIndex) + new Vector3(0.5f, 0.5f, -0.5f);
 		alien.Fall();
+	}
+
+	private void SpawnRobot() {
+		Enemy vTemp = Instantiate(robot);
+		vTemp.main = this;
+		vTemp.grid = grid;
+		int vRandomIndex = Random.Range(0, grid.gridHeight * grid.gridWidth);
+		while (!grid.IsEmptyAt(vRandomIndex)) {
+			vRandomIndex = Random.Range(0, grid.gridHeight * grid.gridWidth);
+		}
+		vTemp.transform.position = grid.IndexToPosition(vRandomIndex) + new Vector3(0.5f, 0.5f, -0.5f);
+		vTemp.Spawn();
 	}
 
 	public void GameOver() {

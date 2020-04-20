@@ -12,11 +12,7 @@ public class Alien : MonoBehaviour {
 	public Transform shadow;
 
 	[Header("Movement")]
-
 	public float speed = 0.5f;
-
-	private ALIEN_STATE state;
-	private Vector3 _targetDestination;
 
 	private CameraShake _camShake;
 
@@ -34,6 +30,13 @@ public class Alien : MonoBehaviour {
 		_camShake = FindObjectOfType<CameraShake>();
 		manager = FindObjectOfType<SCE_main>();
 		shadow.localScale = Vector3.zero;
+	}
+
+	void OnCollisionEnter(Collision pOther) {
+		if (pOther.gameObject.CompareTag("ROBOT")) {
+			Vector3 vDirection = (pOther.transform.position - transform.position).normalized;
+			Expulse(vDirection);
+		}
 	}
 
 	public void Expulse(Vector3 pForceDirection) {
