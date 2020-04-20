@@ -276,9 +276,17 @@ public class WorldGrid : MonoBehaviour {
 		CheckLine();
 	}
 
-	private void ChangeIndex(int pOld, int pNew) {
+	public void ChangeIndex(int pOld, int pNew) {
 		_map[pNew] = _map[pOld];
 		_map[pOld] = null;
+	}
+
+	public bool IsEmptyAt(int pIndex) {
+		return _map[pIndex] == null && pIndex >= 0 && pIndex < _map.Length;
+	}
+
+	public bool IsEmptyAt(int pX, int pY) {
+		return IsEmptyAt(CoordToIndex(pX, pY));
 	}
 
 	public int CoordToIndex(int pX, int pY) {

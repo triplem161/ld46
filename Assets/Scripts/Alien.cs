@@ -83,10 +83,14 @@ public class Alien : MonoBehaviour {
 		RaycastHit vHit = new RaycastHit();
 		bool vHasFoundMagnet = false;
 		// bool vQuickIdle = false;
+		bool vPushMagnet = false;
+		Magnet vMagnetToPush = null;
+		(int x, int y) vMagnetCoord = (0, 0);
 		while (vEllapsed < vDuration) {
 			transform.position = Vector3.Lerp(vStartPos, vEndPos, vEllapsed / vDuration);
 			if (Physics.Raycast(transform.position, vDirection, out vHit, 1.2f, _magnetLayer) && !vHasFoundMagnet) {
-				(int x, int y) vMagnetCoord = grid.PositionToCoord(vHit.point);
+				vMagnetToPush = vHit.collider.GetComponent<Magnet>();
+				vMagnetCoord = grid.PositionToCoord(vHit.point);
 				(int x, int y) vNewEndCoord = (vMagnetCoord.x - (int)vDirection.x, vMagnetCoord.y + (int)vDirection.z);
 
 				int vCellDistance = Mathf.Abs((vRandomX - vNewEndCoord.x) + (vRandomY - vNewEndCoord.y));
@@ -95,6 +99,8 @@ public class Alien : MonoBehaviour {
 				vDuration -= vCellDistance;
 				// vQuickIdle = vCellDistance <= 0;
 				vHasFoundMagnet = true;
+
+				vPushMagnet = vCellDistance > 0;
 			}
 			vEllapsed += Time.deltaTime;
 			yield return null;
@@ -102,7 +108,11 @@ public class Alien : MonoBehaviour {
 		transform.position = vEndPos;
 		animator.SetBool("run", false);
 		runParticles.Stop();
-		StartCoroutine(Idle());
+		if (vPushMagnet) {
+			StartCoroutine(PushMagnet(vMagnetToPush, vDirection, vMagnetCoord));
+		} else {
+			StartCoroutine(Idle());
+		}
 	}
 
 	private IEnumerator Idle() {
@@ -110,5 +120,15 @@ public class Alien : MonoBehaviour {
 		StartCoroutine(Running());
 	}
 
-
+	private IEnumerator PushMagnet(Magnet pMagnet, Vector3 pDirection, (int x, int y) pMagnetCoord) {
+		(int x, int y) vPushCoord = (pMagnetCoord.x + (int)pDirection.x, pMagnetCoord.y - (int)pDirection.z);
+		if (grid.IsEmptyAt(vPushCoord.x, vPushCoord.y)) {
+			pMagnet.MoveTo(grid.CoordToPosition(vPushCoord.x, vPushCoord.y) + new Vector3(0.5f, 0, -0.5f));
+			grid.ChangeIndex(grid.CoordToIndex(pMagnetCoord.x, pMagnetCoord.y), grid.CoordToIndex(vPushCoord.x, vPushCoord.y));
+		}
+		animator.SetBool("hurt", true);
+		yield return new WaitForSeconds(0.5f);
+		animator.SetBool("hurt", false);
+		StartCoroutine(Idle());
+	}
 }
