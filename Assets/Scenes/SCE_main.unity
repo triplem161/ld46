@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -1175,6 +1175,16 @@ PrefabInstance:
       propertyPath: grid
       value: 
       objectReference: {fileID: 756739838}
+    - target: {fileID: 4929516729456608507, guid: 40b38a73c9855694280f0dbe26815355,
+        type: 3}
+      propertyPath: speed
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4929516729456608507, guid: 40b38a73c9855694280f0dbe26815355,
+        type: 3}
+      propertyPath: shadow
+      value: 
+      objectReference: {fileID: 2141845624}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 40b38a73c9855694280f0dbe26815355, type: 3}
 --- !u!1 &1214915599
@@ -1741,6 +1751,12 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2099451652}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &2141845624 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4697049460275122260, guid: 40b38a73c9855694280f0dbe26815355,
+    type: 3}
+  m_PrefabInstance: {fileID: 1126390199}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5675626480122232735
 PrefabInstance:
   m_ObjectHideFlags: 0

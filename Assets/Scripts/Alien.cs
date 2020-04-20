@@ -9,6 +9,11 @@ public class Alien : MonoBehaviour {
 	public SpriteRenderer spriteRenderer;
 	public ParticleSystem runParticles;
 	public ParticleSystem deathParticles;
+	public Transform shadow;
+
+	[Header("Movement")]
+
+	public float speed = 0.5f;
 
 	private ALIEN_STATE state;
 	private Vector3 _targetDestination;
@@ -28,6 +33,7 @@ public class Alien : MonoBehaviour {
 
 		_camShake = FindObjectOfType<CameraShake>();
 		manager = FindObjectOfType<SCE_main>();
+		shadow.localScale = Vector3.zero;
 	}
 
 	public void Expulse(Vector3 pForceDirection) {
@@ -36,6 +42,23 @@ public class Alien : MonoBehaviour {
 		pForceDirection += Vector3.up * 5;
 		GetComponent<Rigidbody>().AddForce(pForceDirection);
 		StartCoroutine(Dying());
+	}
+
+	public void Fall() {
+		StartCoroutine(Falling());
+	}
+
+	private IEnumerator Falling() {
+		float vEllapsed = 0;
+		float vDuration = 0.25f;
+
+		while (vEllapsed < vDuration) {
+			vEllapsed += Time.deltaTime;
+			transform.localPosition = Vector3.up * Mathf.Lerp(10.0f, 0.0f, vEllapsed / vDuration);
+			shadow.localScale = Vector3.Lerp(Vector3.zero, new Vector3(1.3f, 0.5f, 1f), vEllapsed / vDuration);
+			yield return null;
+		}
+		// Instantiate(DeathParticles, transform.position, Quaternion.identity);
 	}
 
 	private IEnumerator Dying() {
@@ -78,7 +101,7 @@ public class Alien : MonoBehaviour {
 
 		grid.CeilBlackList(vCoord.x, vCoord.y, new Vector2Int((int)vDirection.x, (int)vDirection.z), 4);
 
-		float vDuration = vSquareCount;
+		float vDuration = vSquareCount * speed;
 		float vEllapsed = 0;
 
 		runParticles.Play();
@@ -101,7 +124,7 @@ public class Alien : MonoBehaviour {
 					int vCellDistance = Mathf.Abs((vRandomX - vNewEndCoord.x) + (vRandomY - vNewEndCoord.y));
 					vEndPos = grid.CoordToPosition(vNewEndCoord.x, vNewEndCoord.y) + new Vector3(0.5f, 0.5f, -0.5f);
 
-					vDuration -= vCellDistance;
+					vDuration -= vCellDistance * speed;
 					// vQuickIdle = vCellDistance <= 0;
 					vHasFoundMagnet = true;
 

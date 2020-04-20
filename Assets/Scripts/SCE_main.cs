@@ -14,6 +14,9 @@ public class SCE_main : MonoBehaviour {
 	public Transform repulseCursor;
 	public Cursor cursorVisuals;
 
+	[Header("Alien")]
+	public Alien alien;
+
 	[Header("Magnet Spawner")]
 	public Magnet[] magnetPrefabs;
 	public float initMagnetSpawnTimer = 3;
@@ -39,12 +42,13 @@ public class SCE_main : MonoBehaviour {
 
 	[Header("Game Over")]
 	public GameObject gameOverUI;
-	
+
 
 	private bool _spawnInfinite = false;
 	private bool _hasInputs = false;
 
 	void Awake() {
+		alien.gameObject.SetActive(false);
 		_gridLayer = LayerMask.GetMask("GRID_COLLISION");
 	}
 
@@ -56,7 +60,7 @@ public class SCE_main : MonoBehaviour {
 		else {
 			StartCoroutine(Tutorial());
 		}
-		
+
 	}
 
 	IEnumerator Arcade() {
@@ -68,7 +72,7 @@ public class SCE_main : MonoBehaviour {
 			yield return new WaitForSeconds(0.1f);
 		}
 
-		//SPAWN ALIEN
+		alien.gameObject.SetActive(false);
 
 		_hasInputs = true;
 	}
@@ -149,7 +153,7 @@ public class SCE_main : MonoBehaviour {
 		yield return new WaitForSeconds(0.5f);
 
 		tutorial03.SetActive(true);
-
+		SpawnAlien();
 		yield return new WaitForSeconds(5f);
 
 		tutorial03.SetActive(false);
@@ -179,7 +183,7 @@ public class SCE_main : MonoBehaviour {
 			ManageSpawnTime();
 			Spawner();
 		}
-			
+
 	}
 
 	private void Inputs() {
@@ -238,6 +242,16 @@ public class SCE_main : MonoBehaviour {
 	private void SpawnCube(int pIndex) {
 		Magnet vTemp = Instantiate(magnetPrefabs[pIndex]);
 		grid.AddMagnet(vTemp);
+	}
+
+	private void SpawnAlien() {
+		int vRandomIndex = Random.Range(0, grid.gridHeight * grid.gridWidth);
+		while (!grid.IsEmptyAt(vRandomIndex)) {
+			vRandomIndex = Random.Range(0, grid.gridHeight * grid.gridWidth);
+		}
+		alien.transform.position = grid.IndexToPosition(vRandomIndex);
+		alien.gameObject.SetActive(true);
+		alien.Fall();
 	}
 
 	public void GameOver() {
