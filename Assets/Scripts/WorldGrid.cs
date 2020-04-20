@@ -18,6 +18,9 @@ public class WorldGrid : MonoBehaviour {
 	private Magnet[] _map;
 	private List<(int startIndex, int endIndex)> _moveOrder;
 
+	private int _comboCounter;
+	private int _lineDestroyed;
+
 	void Awake() {
 		_moveOrder = new List<(int startIndex, int endIndex)>();
 		_map = new Magnet[gridWidth * gridHeight];
@@ -154,6 +157,7 @@ public class WorldGrid : MonoBehaviour {
 					for (int i = x - 1; i >= x - vColorCount; i--) {
 						if (_indexToDestroy.IndexOf(i) == -1) {
 							_indexToDestroy.Add(i);
+							_lineDestroyed++;
 						}
 						// Destroy(_map[i].gameObject);
 						// _map[i] = null;
@@ -169,6 +173,7 @@ public class WorldGrid : MonoBehaviour {
 						for (int i = x - 1; i >= x - vColorCount; i--) {
 							if (_indexToDestroy.IndexOf(i) == -1) {
 								_indexToDestroy.Add(i);
+								_lineDestroyed++;
 							}
 							// Destroy(_map[i].gameObject);
 							// _map[i] = null;
@@ -186,6 +191,7 @@ public class WorldGrid : MonoBehaviour {
 					for (int i = x - 1; i >= x - vColorCount; i--) {
 						if (_indexToDestroy.IndexOf(i) == -1) {
 							_indexToDestroy.Add(i);
+							_lineDestroyed++;
 						}
 						// Destroy(_map[i].gameObject);
 						// _map[i] = null;
@@ -207,6 +213,7 @@ public class WorldGrid : MonoBehaviour {
 							for (int i = 0; i < vColorCount; ++i) {
 								if (_indexToDestroy.IndexOf(i) == -1) {
 									_indexToDestroy.Add(CoordToIndex(x, y - 1 - i));
+									_lineDestroyed++;
 								}
 								// Destroy(_map[CoordToIndex(x, y - 1- i)].gameObject);
 								// magnetsCount -= vColorCount;
@@ -222,6 +229,7 @@ public class WorldGrid : MonoBehaviour {
 						for (int i = 0; i < vColorCount; ++i) {
 							if (_indexToDestroy.IndexOf(i) == -1) {
 								_indexToDestroy.Add(CoordToIndex(x, y - 1 - i));
+								_lineDestroyed++;
 							}
 							// Destroy(_map[CoordToIndex(x, y - 1 - i)].gameObject);
 							// magnetsCount -= vColorCount;
@@ -235,6 +243,7 @@ public class WorldGrid : MonoBehaviour {
 				for (int i = 0; i < vColorCount; ++i) {
 					if (_indexToDestroy.IndexOf(i) == -1) {
 						_indexToDestroy.Add(CoordToIndex(x, y - i));
+						_lineDestroyed++;
 					}
 					// Destroy(_map[CoordToIndex(x, y - i)].gameObject);
 					// magnetsCount -= vColorCount;
@@ -244,11 +253,16 @@ public class WorldGrid : MonoBehaviour {
 		}
 
 		if (_indexToDestroy.Count > 0) {
+			_comboCounter++;
 			DestroyMagnet(_indexToDestroy);
+		} else {
+			_comboCounter = 0;
 		}
 	}
 
 	private void DestroyMagnet(List<int> pList) {
+		EventsManager.Instance.Trigger<ScoreEvent>("score:update", new ScoreEvent(pList.Count, _comboCounter, _lineDestroyed));
+		_lineDestroyed = 0;
 		foreach (int vIndex in pList) {
 			_map[vIndex].Destroy();
 			magnetsCount--;
@@ -266,6 +280,7 @@ public class WorldGrid : MonoBehaviour {
 		_map[vIndex] = pToAdd;
 		_map[vIndex].transform.localPosition = IndexToPosition(vIndex) + new Vector3(0.5f, 0, -0.5f);
 		magnetsCount++;
+		CheckLine();
 	}
 
 	private void ChangeIndex(int pOld, int pNew) {
@@ -296,14 +311,6 @@ public class WorldGrid : MonoBehaviour {
 		Vector3 vOffset = new Vector3(gridWidth / 2f, 0, gridHeight / 2f);
 		return (Mathf.FloorToInt(pPosition.x + vOffset.x), Mathf.FloorToInt(vOffset.z - pPosition.z));
 	}
-
-	// public (int yMin, int yMax) YToCoordExtreme(int pY) {
-	//	return (0, 0);
-	// }
-
-	// public (int xMin, int xMax) XToCoordExtreme(int pX) {
-	//	return (0, 0);
-	// }
 
 	private string GridToString() {
 		Debug.ClearDeveloperConsole();

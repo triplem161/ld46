@@ -56,3 +56,15 @@ public class EventsManager {
 }
 
 public class GameEvent{}
+
+public class ScoreEvent: GameEvent {
+	public int destroyedMagnet;
+	public int comboCounter;
+	public int lineDestroyed;
+
+	public ScoreEvent(int pMagnetsDestroyed, int pComboCounter, int pLineDestroyed) {
+		destroyedMagnet = pMagnetsDestroyed;
+		comboCounter = pComboCounter;
+		lineDestroyed = pLineDestroyed;
+	}
+}
