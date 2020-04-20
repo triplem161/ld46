@@ -72,7 +72,7 @@ public class SCE_main : MonoBehaviour {
 			yield return new WaitForSeconds(0.1f);
 		}
 
-		alien.gameObject.SetActive(false);
+		SpawnAlien();
 
 		_hasInputs = true;
 	}
@@ -251,8 +251,8 @@ public class SCE_main : MonoBehaviour {
 		while (!grid.IsEmptyAt(vRandomIndex)) {
 			vRandomIndex = Random.Range(0, grid.gridHeight * grid.gridWidth);
 		}
-		alien.transform.position = grid.IndexToPosition(vRandomIndex);
 		alien.gameObject.SetActive(true);
+		alien.transform.position = grid.IndexToPosition(vRandomIndex) + new Vector3(0.5f, 0.5f, -0.5f);
 		alien.Fall();
 	}
 

@@ -4824,12 +4824,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45f6174a701affe4aa367d653ab2df49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  manager: {fileID: 0}
   grid: {fileID: 0}
   animator: {fileID: 4826524597530499320}
   spriteRenderer: {fileID: 4826524597530499319}
   runParticles: {fileID: 3670190327573138744}
   deathParticles: {fileID: 2711971990662585124, guid: 5b952b56856d7794fb8236e629de59bb,
     type: 3}
+  shadow: {fileID: 4697049460275122260}
+  speed: 0.5
 --- !u!54 &8624931695826652703
 Rigidbody:
   m_ObjectHideFlags: 0

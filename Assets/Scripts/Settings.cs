@@ -4,5 +4,5 @@ using UnityEngine;
 
 public static class Settings
 {
-    public static bool ARCADE_MODE;
+	public static bool ARCADE_MODE;
 }

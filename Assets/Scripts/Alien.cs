@@ -50,15 +50,21 @@ public class Alien : MonoBehaviour {
 
 	private IEnumerator Falling() {
 		float vEllapsed = 0;
-		float vDuration = 0.25f;
+		float vDuration = 0.5f;
 
+		Vector3 vStartPos = transform.position + Vector3.up * 15f;
+		Vector3 vEndPos = transform.position;
+
+		animator.SetBool("hurt", true);
 		while (vEllapsed < vDuration) {
+			transform.position = Vector3.Lerp(vStartPos, vEndPos, vEllapsed / vDuration);
 			vEllapsed += Time.deltaTime;
-			transform.localPosition = Vector3.up * Mathf.Lerp(10.0f, 0.0f, vEllapsed / vDuration);
 			shadow.localScale = Vector3.Lerp(Vector3.zero, new Vector3(1.3f, 0.5f, 1f), vEllapsed / vDuration);
 			yield return null;
 		}
-		// Instantiate(DeathParticles, transform.position, Quaternion.identity);
+		Instantiate(deathParticles, transform.position, Quaternion.identity);
+		animator.SetBool("hurt", false);
+		StartCoroutine(Idle());
 	}
 
 	private IEnumerator Dying() {
