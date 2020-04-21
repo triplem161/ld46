@@ -14,6 +14,10 @@ public class Alien : MonoBehaviour {
 	[Header("Movement")]
 	public float speed = 0.5f;
 
+	[Header("Sounds")]
+	public GameObject alienHurt;
+	public GameObject alienDeath;
+
 	private CameraShake _camShake;
 
 	private int _magnetLayer;
@@ -64,12 +68,14 @@ public class Alien : MonoBehaviour {
 			shadow.localScale = Vector3.Lerp(Vector3.zero, new Vector3(1.3f, 0.5f, 1f), vEllapsed / vDuration);
 			yield return null;
 		}
+		Instantiate(alienHurt);
 		Instantiate(deathParticles, transform.position, Quaternion.identity);
 		animator.SetBool("hurt", false);
 		StartCoroutine(Idle());
 	}
 
 	private IEnumerator Dying() {
+		Instantiate(alienDeath);
 		_camShake.Shake(0.25f);
 		animator.SetBool("hurt", true);
 		yield return new WaitForSeconds(0.5f);
@@ -168,6 +174,7 @@ public class Alien : MonoBehaviour {
 			}
 			animator.SetBool("hurt", true);
 			_camShake.Shake(0.1f);
+			Instantiate(alienHurt);
 			GameObject vParticles = Instantiate(deathParticles.gameObject, pMagnet.transform.position, Quaternion.identity) as GameObject;
 			vParticles.transform.localScale = Vector3.one * 0.5f;
 			GetComponent<Rigidbody>().AddForce(Vector3.up * 1.5f);

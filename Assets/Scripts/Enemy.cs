@@ -16,6 +16,9 @@ public class Enemy : MonoBehaviour {
 
 	private CameraShake _camShake;
 
+	[Header("Sounds")]
+	public GameObject explosionSound;
+
 	void Awake() {
 		_camShake = FindObjectOfType<CameraShake>();
 		_magnetLayer = LayerMask.GetMask("MAGNET_COLLISION");
@@ -30,7 +33,9 @@ public class Enemy : MonoBehaviour {
 		_camShake.Shake(0.25f);
 		main.robotsCount--;
 		Instantiate(deathParticles, transform.position, Quaternion.identity);
+		Instantiate(explosionSound);
 		Destroy(gameObject);
+
 	}
 
 	private IEnumerator Falling() {

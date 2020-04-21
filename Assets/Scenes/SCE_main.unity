@@ -843,6 +843,8 @@ MonoBehaviour:
   gridWidth: 10
   gridHeight: 10
   magnetsCount: 0
+  linedFormedSound: {fileID: 8386545956293991800, guid: 1ebba8b7ae0f1fb42a6d6ae4f54503d1,
+    type: 3}
 --- !u!1 &819090920
 GameObject:
   m_ObjectHideFlags: 0
@@ -1078,9 +1080,9 @@ MonoBehaviour:
   initMagnetSpawnTimer: 3
   endMagnetSpawnTimer: 1
   maxMagnet: 20
-  durationBeforeMaxSpawnRate: 60
+  durationBeforeMaxSpawnRate: 120
   initRobotSpawnTimer: 45
-  endRobotSpawnTimer: 15
+  endRobotSpawnTimer: 5
   maxRobot: 5
   robotsCount: 0
   tutorial01: {fileID: 5675626480122232739}
@@ -1122,6 +1124,12 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   gameOverUI: {fileID: 1421458832}
+  moveBlockSound: {fileID: 6181618702549378852, guid: 3b208119849623f44999cfaf7e2eac4d,
+    type: 3}
+  readySound: {fileID: 5043684565010803445, guid: ef6b56272cf14d44cba573d8596e86c3,
+    type: 3}
+  startSound: {fileID: 6590743823117083768, guid: e032fd1fb556ee1499cba30d44b53690,
+    type: 3}
 --- !u!82 &1107983716
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1364,6 +1372,20 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 5675626480122232735}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1421458833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1421458832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f734c58aacd8b54eb434edf4e907b01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wooshSound: {fileID: 5663352217771670608, guid: f34e36241a7a2ef4d9bf4f306e7dde74,
+    type: 3}
 --- !u!4 &1493419602 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4826524597487785390, guid: 40b38a73c9855694280f0dbe26815355,
@@ -1968,106 +1990,17 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2180455316389758716, guid: 158c619c6bde5514ea6ae6bff4bb9f95,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 75
-      objectReference: {fileID: 0}
     - target: {fileID: 2368955714496622823, guid: 158c619c6bde5514ea6ae6bff4bb9f95,
         type: 3}
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
-    - target: {fileID: 3588456163526246653, guid: 158c619c6bde5514ea6ae6bff4bb9f95,
+    - target: {fileID: 4839000675335827717, guid: 158c619c6bde5514ea6ae6bff4bb9f95,
         type: 3}
-      propertyPath: m_textInfo.characterCount
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 3588456163526246653, guid: 158c619c6bde5514ea6ae6bff4bb9f95,
+      propertyPath: clickSound
+      value: 
+      objectReference: {fileID: 6680274858520864582, guid: 8bb1a527eeb917140aa0bb4b7de5bd77,
         type: 3}
-      propertyPath: m_textInfo.wordCount
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3588456163526246653, guid: 158c619c6bde5514ea6ae6bff4bb9f95,
-        type: 3}
-      propertyPath: m_textInfo.lineCount
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3588456163526246653, guid: 158c619c6bde5514ea6ae6bff4bb9f95,
-        type: 3}
-      propertyPath: m_textInfo.pageCount
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3588456163526246653, guid: 158c619c6bde5514ea6ae6bff4bb9f95,
-        type: 3}
-      propertyPath: m_text
-      value: READY?
-      objectReference: {fileID: 0}
-    - target: {fileID: 3588456163526246653, guid: 158c619c6bde5514ea6ae6bff4bb9f95,
-        type: 3}
-      propertyPath: m_fontSize
-      value: 400
-      objectReference: {fileID: 0}
-    - target: {fileID: 3588456163526246653, guid: 158c619c6bde5514ea6ae6bff4bb9f95,
-        type: 3}
-      propertyPath: m_fontSizeBase
-      value: 400
-      objectReference: {fileID: 0}
-    - target: {fileID: 3588456163526246653, guid: 158c619c6bde5514ea6ae6bff4bb9f95,
-        type: 3}
-      propertyPath: m_firstOverflowCharacterIndex
-      value: -1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6399731422288371498, guid: 158c619c6bde5514ea6ae6bff4bb9f95,
-        type: 3}
-      propertyPath: m_textInfo.characterCount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6399731422288371498, guid: 158c619c6bde5514ea6ae6bff4bb9f95,
-        type: 3}
-      propertyPath: m_textInfo.wordCount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6399731422288371498, guid: 158c619c6bde5514ea6ae6bff4bb9f95,
-        type: 3}
-      propertyPath: m_textInfo.lineCount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6399731422288371498, guid: 158c619c6bde5514ea6ae6bff4bb9f95,
-        type: 3}
-      propertyPath: m_textInfo.pageCount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7017689759187869058, guid: 158c619c6bde5514ea6ae6bff4bb9f95,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7183391446362302769, guid: 158c619c6bde5514ea6ae6bff4bb9f95,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7967154563839761238, guid: 158c619c6bde5514ea6ae6bff4bb9f95,
-        type: 3}
-      propertyPath: m_textInfo.characterCount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7967154563839761238, guid: 158c619c6bde5514ea6ae6bff4bb9f95,
-        type: 3}
-      propertyPath: m_textInfo.wordCount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7967154563839761238, guid: 158c619c6bde5514ea6ae6bff4bb9f95,
-        type: 3}
-      propertyPath: m_textInfo.lineCount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7967154563839761238, guid: 158c619c6bde5514ea6ae6bff4bb9f95,
-        type: 3}
-      propertyPath: m_textInfo.pageCount
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 158c619c6bde5514ea6ae6bff4bb9f95, type: 3}
 --- !u!224 &5675626480122232736 stripped

@@ -54,6 +54,11 @@ public class SCE_main : MonoBehaviour {
 	[Header("Game Over")]
 	public GameObject gameOverUI;
 
+	[Header("Sounds")]
+	public GameObject moveBlockSound;
+	public GameObject readySound;
+	public GameObject startSound;
+
 
 	private bool _spawnInfinite = false;
 	private bool _hasInputs = false;
@@ -93,6 +98,7 @@ public class SCE_main : MonoBehaviour {
 		float vEllapsed = 0f;
 		float vDuration = 1f;
 
+		Instantiate(readySound);
 		alertText.text = "Ready?";
 
 		while (vEllapsed < vDuration) {
@@ -105,6 +111,7 @@ public class SCE_main : MonoBehaviour {
 		vEllapsed = 0f;
 		vDuration = 0.5f;
 
+		Instantiate(startSound);
 		alertText.text = "START";
 
 		while (vEllapsed < vDuration) {
@@ -212,6 +219,7 @@ public class SCE_main : MonoBehaviour {
 				attractCursor.gameObject.SetActive(true);
 				grid.PullOrder(vHit.point);
 				cursorVisuals.Attract();
+				Instantiate(moveBlockSound); 
 			} else {
 				attractCursor.transform.position = Vector3.down;
 			}
@@ -227,6 +235,7 @@ public class SCE_main : MonoBehaviour {
 				repulseCursor.gameObject.SetActive(true);
 				grid.PushOrder(vHit.point);
 				cursorVisuals.Repulse();
+				Instantiate(moveBlockSound);
 			} else {
 				repulseCursor.transform.position = Vector3.down;
 			}

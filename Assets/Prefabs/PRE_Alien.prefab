@@ -4833,6 +4833,10 @@ MonoBehaviour:
     type: 3}
   shadow: {fileID: 4697049460275122260}
   speed: 0.5
+  alienHurt: {fileID: 9126079419230375591, guid: c578eb0eba912a24b91de992d7354b1a,
+    type: 3}
+  alienDeath: {fileID: 3249521703016443118, guid: 8029067be83e14e468bb5a7981884c07,
+    type: 3}
 --- !u!54 &8624931695826652703
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -382,7 +382,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   color: 1
   cubeRenderer: {fileID: 4616149059699801268}
+  isMoving: 0
   DeathParticles: {fileID: 2711971990662585124, guid: 5b952b56856d7794fb8236e629de59bb,
+    type: 3}
+  fallSound: {fileID: 4042867331873578643, guid: c72ac7d404b42df4fb90cb279747a772,
+    type: 3}
+  destroySound: {fileID: 4299288099388892414, guid: 0127d5168569ada44875197cfd079b30,
     type: 3}
 --- !u!65 &-2753252987740889638
 BoxCollider:

@@ -18,6 +18,9 @@ public class WorldGrid : MonoBehaviour {
 	private int _comboCounter;
 	private int _lineDestroyed;
 
+	[Header("Sounds")]
+	public GameObject linedFormedSound;
+
 	void Awake() {
 		_moveOrder = new List<(int startIndex, int endIndex)>();
 		_map = new Magnet[gridWidth * gridHeight];
@@ -253,6 +256,8 @@ public class WorldGrid : MonoBehaviour {
 	}
 
 	private void DestroyMagnet(List<int> pList) {
+		Instantiate(linedFormedSound);
+
 		EventsManager.Instance.Trigger<ScoreEvent>("score:update", new ScoreEvent(pList.Count, _comboCounter, _lineDestroyed));
 		_lineDestroyed = 0;
 		foreach (int vIndex in pList) {

@@ -155,6 +155,8 @@ MonoBehaviour:
   deathParticles: {fileID: 153680425606246680, guid: 00caebfd5139fc64db29d3336886b00a,
     type: 3}
   speed: 0.7
+  explosionSound: {fileID: 5858632847879428045, guid: d7da63ec4c8b16a419b1bfea2b4b855c,
+    type: 3}
 --- !u!65 &5665626284617044869
 BoxCollider:
   m_ObjectHideFlags: 0

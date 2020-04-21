@@ -15,6 +15,10 @@ public class Magnet : MonoBehaviour {
 
 	private CameraShake _camShake;
 
+	[Header("Sounds")]
+	public GameObject fallSound;
+	public GameObject destroySound;
+
 	private void Awake() {
 		_camShake = FindObjectOfType<CameraShake>();
 		cubeMeshTransform = cubeRenderer.transform;
@@ -25,6 +29,9 @@ public class Magnet : MonoBehaviour {
 	}
 
 	IEnumerator Falling() {
+
+		Instantiate(fallSound);
+
 		float vEllapsed = 0;
 		float vDuration = 0.25f;
 
@@ -99,7 +106,7 @@ public class Magnet : MonoBehaviour {
 
 		_camShake.Shake(0.1f);
 
-
+		Instantiate(destroySound);
 		Instantiate(DeathParticles, transform.position, Quaternion.identity);
 
 		vDuration = 0.25f;

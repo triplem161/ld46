@@ -20,6 +20,9 @@ public class Score : MonoBehaviour {
 
 	private int _score;
 
+	[Header("Sounds")]
+	public GameObject alertScoreSound;
+
 	private void Start() {
 		_alertList = new List<string>();
 		scoreAmountText.text = _score.ToString("000000");
@@ -82,6 +85,9 @@ public class Score : MonoBehaviour {
 	IEnumerator AlertProcess() {
 		while(true) {
 			while (_alertList.Count > 0) {
+
+				Instantiate(alertScoreSound);
+
 				// Debug.Log("ALERRT");
 				alertText.text = _alertList[0];
 
